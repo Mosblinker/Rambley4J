@@ -20,7 +20,7 @@ import swing.ListenedPainter;
  * of the code is based off of. Given their help, I have decided to credit them 
  * as a co-author for this class.
  * 
- * @author WALLE1Doctor1Who
+ * @author Mosblinker
  * @author AnimalWave on Discord
  */
 public class RambleyPainter extends ListenedPainter<Component>{

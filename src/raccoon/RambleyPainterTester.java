@@ -21,7 +21,7 @@ import javax.swing.*;
 
 /**
  *
- * @author WALLE1Doctor1Who
+ * @author Mosblinker
  */
 public class RambleyPainterTester extends javax.swing.JFrame {
     /**

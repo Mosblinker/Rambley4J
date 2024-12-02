@@ -24,7 +24,7 @@ import javax.swing.*;
 
 /**
  * This is a program that renders Rambley the Raccoon.
- * @author WALLE1Doctor1Who
+ * @author Mosblinker
  * @version 0.7.0
  */
 public class Rambley4J extends JFrame {
@@ -44,13 +44,13 @@ public class Rambley4J extends JFrame {
      */
     private static final String[] CREDITS = {
         "                         ---- Developers ----",
-        "WALLE1Doctor1Who - Main developer and artist.",
+        "Mosblinker - Main developer and artist.",
         "                          ---- Testers ----",
         "*Insert Testers Here*",
         "                           ---- Libraries ----",
         "Thumbnailator - coobird - https://github.com/coobird/thumbnailator",
-        "SwingExtended - WALLE1Doctor1Who - https://github.com/WALLE1Doctor1Who/SwingExtended",
-        "FilesExtended - WALLE1Doctor1Who - https://github.com/WALLE1Doctor1Who/FilesExtended",
+        "SwingExtended - Mosblinker - https://github.com/Mosblinker/SwingExtended",
+        "FilesExtended - Mosblinker - https://github.com/Mosblinker/FilesExtended",
         "                       ---- Special Thanks ----",
         "Special thanks to UniqueGeese and his team for creating Indigo Park and",
         "    thus Rambley.",

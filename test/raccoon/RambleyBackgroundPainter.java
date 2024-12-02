@@ -10,7 +10,7 @@ import javax.swing.*;
 
 /**
  * This is a Painter that paints the background behind Rambley the Raccoon.
- * @author WALLE1Doctor1Who
+ * @author Mosblinker
  */
 public class RambleyBackgroundPainter implements Painter<RectangularShape>{
     /**

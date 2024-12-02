@@ -9,7 +9,7 @@ import java.awt.*;
 
 /**
  *
- * @author WALLE1Doctor1Who
+ * @author Mosblinker
  */
 public class RambleyIcon extends RambleyPainter implements Icon2D {
     
