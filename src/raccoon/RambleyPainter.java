@@ -952,21 +952,21 @@ public class RambleyPainter extends ListenedPainter<Component>{
      */
     private Rectangle2D rect = null;
     /**
-     * A scratch Ellipse2D object used for rendering the Rambley. This is 
+     * A scratch Ellipse2D object used for rendering Rambley. This is 
      * initialized the first time it is used. This scratch object may change at 
      * any time during the rendering process, and should not be assumed to be in 
      * a known state before being used.
      */
     private Ellipse2D ellipse1 = null;
     /**
-     * A second scratch Ellipse2D object used for rendering the Rambley. This is 
+     * A second scratch Ellipse2D object used for rendering Rambley. This is 
      * initialized the first time it is used. This scratch object may change at 
      * any time during the rendering process, and should not be assumed to be in 
      * a known state before being used.
      */
     private Ellipse2D ellipse2 = null;
     /**
-     * A third scratch Ellipse2D object used for rendering the Rambley. This is 
+     * A third scratch Ellipse2D object used for rendering Rambley. This is 
      * initialized the first time it is used. This scratch object may change at 
      * any time during the rendering process, and should not be assumed to be in 
      * a known state before being used.
