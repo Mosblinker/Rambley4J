@@ -118,6 +118,9 @@ public class RambleyPainterTester extends javax.swing.JFrame {
                     rambley.getPixelGridLineSpacing()));
             linkEyesToggle.setSelected(config.getBoolean(LINK_RAMBLEY_EYES_KEY,
                     linkEyesToggle.isSelected()));
+            rambley.getBackgroundPainter().setPolkaDotShape(config.getInt(
+                    BackgroundPainter.POLKA_DOT_SHAPE_PROPERTY_CHANGED, 
+                    rambley.getBackgroundPainter().getPolkaDotShape()));
             double eyeRX = config.getDouble(
                     RambleyPainter.RAMBLEY_RIGHT_EYE_X_PROPERTY_CHANGED, 
                     rambley.getRambleyRightEyeX());
@@ -620,7 +623,7 @@ public class RambleyPainterTester extends javax.swing.JFrame {
             }
         });
 
-        bgShapeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Rhombus", "Circle" }));
+        bgShapeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Rhombus", "Circle", "Square" }));
         bgShapeCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bgShapeComboActionPerformed(evt);
