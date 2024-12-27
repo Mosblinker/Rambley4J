@@ -181,10 +181,16 @@ public class Rambley4J extends JFrame {
             rambleyPainter.setFlags(config.getInt(RAMBLEY_FLAGS_KEY, 
                     rambleyPainter.getFlags()) & RambleyPainter.MAXIMUM_VALID_FLAGS);
             bgDotSizeSpinner.setValue(config.getDouble(BACKGROUND_DOT_SIZE_KEY, 
-                    rambleyPainter.getBackgroundDotSize()));
+                    rambleyPainter.getBackgroundPainter().getPolkaDotSize()));
             bgDotSpacingSpinner.setValue(config.getDouble(BACKGROUND_DOT_SPACING_KEY, 
-                    rambleyPainter.getBackgroundDotSpacing()));
-            // Insert setting bgDotsComboBox from BACKGROUND_DOT_SHAPE_KEY here
+                    rambleyPainter.getBackgroundPainter().getPolkaDotSpacing()));
+            try{
+                int shape = rambleyPainter.getBackgroundPainter().getPolkaDotShape();
+                rambleyPainter.getBackgroundPainter().setPolkaDotShape(config.getInt(BACKGROUND_DOT_SHAPE_KEY, shape));
+            } catch (IllegalArgumentException ex) {
+                System.out.println("Invalid Shape: " +ex);
+            }
+            bgDotsShapeCombo.setSelectedIndex(rambleyPainter.getBackgroundPainter().getPolkaDotShape());
             gridSpacingSpinner.setValue(config.getDouble(PIXEL_GRID_SPACING_KEY, 
                     rambleyPainter.getPixelGridPainter().getLineSpacing()));
             gridThicknessSpinner.setValue(config.getFloat(PIXEL_GRID_THICKNESS_KEY, 
@@ -291,7 +297,6 @@ public class Rambley4J extends JFrame {
         gridToggle.setSelected(rambleyPainter.isPixelGridPainted());
         evilToggle.setSelected(rambleyPainter.isRambleyEvil());
         ignoreRatioToggle.setSelected(rambleyPainter.isAspectRatioIgnored());
-        bgDotsShapeCombo.setSelectedIndex(rambleyPainter.getCircularBackgroundDots() ? 1 : 0);
         shadowToggle.setSelected(rambleyPainter.isRambleyShadowPainted());
         outlineToggle.setSelected(rambleyPainter.isRambleyOutlinePainted());
         updateHeightSpinnerEnabled();
@@ -1053,7 +1058,7 @@ public class Rambley4J extends JFrame {
     }//GEN-LAST:event_gridToggleActionPerformed
 
     private void bgDotsShapeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bgDotsShapeComboActionPerformed
-        rambleyPainter.setCircularBackgroundDots(bgDotsShapeCombo.getSelectedIndex() > 0);
+        rambleyPainter.getBackgroundPainter().setPolkaDotShape(bgDotsShapeCombo.getSelectedIndex());
     }//GEN-LAST:event_bgDotsShapeComboActionPerformed
 
     private void bandanaToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bandanaToggleActionPerformed
@@ -1158,11 +1163,11 @@ public class Rambley4J extends JFrame {
     }//GEN-LAST:event_gridThicknessSpinnerStateChanged
 
     private void bgDotSizeSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bgDotSizeSpinnerStateChanged
-        rambleyPainter.setBackgroundDotSize((double)bgDotSizeSpinner.getValue());
+        rambleyPainter.getBackgroundPainter().setPolkaDotSize((double)bgDotSizeSpinner.getValue());
     }//GEN-LAST:event_bgDotSizeSpinnerStateChanged
 
     private void bgDotSpacingSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bgDotSpacingSpinnerStateChanged
-        rambleyPainter.setBackgroundDotSpacing((double)bgDotSpacingSpinner.getValue());
+        rambleyPainter.getBackgroundPainter().setPolkaDotSpacing((double)bgDotSpacingSpinner.getValue());
     }//GEN-LAST:event_bgDotSpacingSpinnerStateChanged
 
     private void widthSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_widthSpinnerStateChanged
@@ -1195,8 +1200,8 @@ public class Rambley4J extends JFrame {
         heightSpinner.setValue(DEFAULT_RAMBLEY_HEIGHT);
         linkSizeToggle.setSelected(Objects.equals(widthSpinner.getValue(), 
                 heightSpinner.getValue()));
-        bgDotSizeSpinner.setValue(rambleyPainter.getBackgroundDotSize());
-        bgDotSpacingSpinner.setValue(rambleyPainter.getBackgroundDotSpacing());
+        bgDotSizeSpinner.setValue(rambleyPainter.getBackgroundPainter().getPolkaDotSize());
+        bgDotSpacingSpinner.setValue(rambleyPainter.getBackgroundPainter().getPolkaDotSpacing());
         gridSpacingSpinner.setValue(rambleyPainter.getPixelGridPainter().getLineSpacing());
         gridThicknessSpinner.setValue(rambleyPainter.getPixelGridPainter().getLineThickness());
         double eyeRX = rambleyPainter.getRambleyRightEyeX() * 100;
@@ -1450,13 +1455,16 @@ public class Rambley4J extends JFrame {
                         switch(evt.getPropertyName()){
                             case(BackgroundPainter.POLKA_DOT_SIZE_PROPERTY_CHANGED):
                                 config.putDouble(BACKGROUND_DOT_SIZE_KEY, 
-                                        rambleyPainter.getBackgroundDotSize());
+                                        rambleyPainter.getBackgroundPainter().getPolkaDotSize());
                                 break;
                             case(BackgroundPainter.POLKA_DOT_SPACING_PROPERTY_CHANGED):
                                 config.putDouble(BACKGROUND_DOT_SPACING_KEY, 
-                                        rambleyPainter.getBackgroundDotSpacing());
+                                        rambleyPainter.getBackgroundPainter().getPolkaDotSpacing());
                                 break;
-                            // TODO: BACKGROUND_DOT_SHAPE_KEY goes here
+                            case(BackgroundPainter.POLKA_DOT_SHAPE_PROPERTY_CHANGED):
+                                config.putInt(BACKGROUND_DOT_SHAPE_KEY, 
+                                        rambleyPainter.getBackgroundPainter().getPolkaDotShape());
+                                break;
                             case(PixelGridPainter.LINE_SPACING_PROPERTY_CHANGED):
                                 config.putDouble(PIXEL_GRID_SPACING_KEY, 
                                         rambleyPainter.getPixelGridPainter().getLineSpacing());
