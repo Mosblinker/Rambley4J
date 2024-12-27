@@ -580,11 +580,6 @@ public class RambleyPainter extends ListenedPainter<Component>{
      */
     public static final int PAINT_CONDUCTOR_HAT_FLAG =      0x00000400;
     /**
-     * This is the flag for drawing the background polka dots as circles instead 
-     * of rhombuses.
-     */
-    public static final int CIRCULAR_BACKGROUND_DOTS_FLAG = 0x00000800;
-    /**
      * This stores the flags that are set initially when a RambleyPainter is 
      * first constructed.
      */
@@ -599,7 +594,6 @@ public class RambleyPainter extends ListenedPainter<Component>{
      * @see PAINT_RAMBLEY_OUTLINE_FLAG
      * @see PAINT_RAMBLEY_SHADOW_FLAG
      * @see IGNORE_ASPECT_RATIO_FLAG
-     * @see CIRCULAR_BACKGROUND_DOTS_FLAG
      * @see GLITCHY_RAMBLEY_FLAG
      * @see EVIL_RAMBLEY_FLAG
      * @see RAMBLEY_FLIPPED_FLAG
@@ -610,9 +604,9 @@ public class RambleyPainter extends ListenedPainter<Component>{
     public static final int MAXIMUM_VALID_FLAGS = PAINT_BACKGROUND_FLAG | 
             PAINT_PIXEL_GRID_FLAG | PAINT_RAMBLEY_OUTLINE_FLAG | 
             PAINT_RAMBLEY_SHADOW_FLAG | IGNORE_ASPECT_RATIO_FLAG | 
-            CIRCULAR_BACKGROUND_DOTS_FLAG | GLITCHY_RAMBLEY_FLAG | 
-            EVIL_RAMBLEY_FLAG | RAMBLEY_FLIPPED_FLAG | RAMBLEY_JAW_CLOSED_FLAG | 
-            PAINT_RAMBLEY_BANDANA_FLAG | PAINT_CONDUCTOR_HAT_FLAG;
+            GLITCHY_RAMBLEY_FLAG | EVIL_RAMBLEY_FLAG | RAMBLEY_FLIPPED_FLAG | 
+            RAMBLEY_JAW_CLOSED_FLAG | PAINT_RAMBLEY_BANDANA_FLAG | 
+            PAINT_CONDUCTOR_HAT_FLAG;
     /**
      * This identifies that a change has been made to whether the background 
      * should be painted.
@@ -709,8 +703,6 @@ public class RambleyPainter extends ListenedPainter<Component>{
         nameMap.put(IGNORE_ASPECT_RATIO_FLAG, 
                 IGNORE_ASPECT_RATIO_PROPERTY_CHANGED);
         nameMap.put(EVIL_RAMBLEY_FLAG, EVIL_RAMBLEY_PROPERTY_CHANGED);
-        nameMap.put(CIRCULAR_BACKGROUND_DOTS_FLAG, 
-                BackgroundPainter.POLKA_DOT_SHAPE_PROPERTY_CHANGED);
         nameMap.put(RAMBLEY_FLIPPED_FLAG, RAMBLEY_FLIPPED_PROPERTY_CHANGED);
         nameMap.put(RAMBLEY_JAW_CLOSED_FLAG, 
                 RAMBLEY_JAW_CLOSED_PROPERTY_CHANGED);
@@ -788,6 +780,10 @@ public class RambleyPainter extends ListenedPainter<Component>{
      * center of another background polka dot.
      */
     private double dotSpacing;
+    /**
+     * This is a BackgroundPainter used to paint the background.
+     */
+    private BackgroundPainter bgPainter;
     /**
      * This is a PixelGridPainter used to paint the pixel grid effect.
      */
@@ -1095,6 +1091,8 @@ public class RambleyPainter extends ListenedPainter<Component>{
         handler = new Handler();
         dotSize = DEFAULT_BACKGROUND_DOT_SIZE;
         dotSpacing = DEFAULT_BACKGROUND_DOT_SPACING;
+        bgPainter = new BackgroundPainter();
+        bgPainter.addPropertyChangeListener(handler);
         pixelGridPainter = new PixelGridPainter();
         pixelGridPainter.addPropertyChangeListener(handler);
         eyeRightX = eyeRightY = eyeLeftX = eyeLeftY = 0.0;
@@ -1480,12 +1478,13 @@ public class RambleyPainter extends ListenedPainter<Component>{
      * 
      * @return {@code true} if the background polka dots are circles, {@code 
      * false} if the background polka dots are rhombuses.
-     * @see CIRCULAR_BACKGROUND_DOTS_FLAG
      * @see #getFlag 
      * @see #setCircularBackgroundDots
+     * @deprecated Get the background shape from the BackgroundPainter instead
      */
+    @Deprecated
     public boolean getCircularBackgroundDots(){
-        return getFlag(CIRCULAR_BACKGROUND_DOTS_FLAG);
+        return getBackgroundPainter().getPolkaDotShape() == BackgroundPainter.CIRCLE_POLKA_DOTS;
     }
     /**
      * This sets whether the polka dots in the background will be circles or 
@@ -1498,12 +1497,16 @@ public class RambleyPainter extends ListenedPainter<Component>{
      * @param value {@code true} if the background polka dots should be circles, 
      * {@code false} if the background polka dots should be rhombuses.
      * @return This {@code RambleyPainter}.
-     * @see CIRCULAR_BACKGROUND_DOTS_FLAG
      * @see #setFlag 
      * @see #getCircularBackgroundDots
+     * @deprecated set the background shape using the BackgroundPainter instead
      */
+    @Deprecated
     public RambleyPainter setCircularBackgroundDots(boolean value){
-        return setFlag(CIRCULAR_BACKGROUND_DOTS_FLAG,value);
+        getBackgroundPainter().setPolkaDotShape(
+                (value)?BackgroundPainter.CIRCLE_POLKA_DOTS:
+                        BackgroundPainter.RHOMBUS_POLKA_DOTS);
+        return this;
     }
     /**
      * This returns whether certain elements of Rambley will appear on the 
@@ -1646,7 +1649,14 @@ public class RambleyPainter extends ListenedPainter<Component>{
     }
     
     
-    
+    /**
+     * This returns the {@code BackgroundPainter} used to draw the background 
+     * behind Rambley.
+     * @return The {@code BackgroundPainter}.
+     */
+    public BackgroundPainter getBackgroundPainter(){
+        return bgPainter;
+    }
     /**
      * This returns the width and height used for the background polka dots.
      * @return The size of the background polka dots.
@@ -1659,7 +1669,7 @@ public class RambleyPainter extends ListenedPainter<Component>{
      * @see #setCircularBackgroundDots 
      */
     public double getBackgroundDotSize(){
-        return dotSize;
+        return getBackgroundPainter().getPolkaDotSize();
     }
     /**
      * This sets the width and height used for the background polka dots. 
@@ -1674,13 +1684,7 @@ public class RambleyPainter extends ListenedPainter<Component>{
      * @see #setCircularBackgroundDots 
      */
     public RambleyPainter setBackgroundDotSize(double size){
-            // If the new size is different from the old size
-        if (size != dotSize){
-                // Get the old size
-            double old = dotSize;
-            dotSize = size;
-            firePropertyChange(BackgroundPainter.POLKA_DOT_SIZE_PROPERTY_CHANGED,old,size);
-        }
+        getBackgroundPainter().setPolkaDotSize(size);
         return this;
     }
     /**
@@ -1702,7 +1706,7 @@ public class RambleyPainter extends ListenedPainter<Component>{
      * @see #setCircularBackgroundDots 
      */
     public double getBackgroundDotSpacing(){
-        return dotSpacing;
+        return getBackgroundPainter().getPolkaDotSpacing();
     }
     /**
      * This sets the diagonal spacing between the centers of the background 
@@ -1724,13 +1728,7 @@ public class RambleyPainter extends ListenedPainter<Component>{
      * @see #setCircularBackgroundDots 
      */
     public RambleyPainter setBackgroundDotSpacing(double spacing){
-            // If the new spacing is different from the old spacing
-        if (spacing != dotSpacing){
-                // Get the old dot spacing
-            double old = dotSpacing;
-            dotSpacing = spacing;
-            firePropertyChange(BackgroundPainter.POLKA_DOT_SPACING_PROPERTY_CHANGED,old,spacing);
-        }
+        getBackgroundPainter().setPolkaDotSpacing(spacing);
         return this;
     }
     /**
@@ -5897,8 +5895,7 @@ public class RambleyPainter extends ListenedPainter<Component>{
     @Override
     protected String paramString(){
         return "flags="+getFlags()+
-                ",dotSize="+getBackgroundDotSize()+
-                ",dotSpacing="+getBackgroundDotSpacing()+
+                ",backgroundPainter="+getBackgroundPainter()+
                 ",pixelGridPainter="+getPixelGridPainter()+
                 ",rightEye=("+getRambleyRightEyeX()+","+getRambleyRightEyeY()+")"+
                 ",leftEye=("+getRambleyLeftEyeX()+","+getRambleyLeftEyeY()+")"+
@@ -5912,12 +5909,12 @@ public class RambleyPainter extends ListenedPainter<Component>{
     public RambleyPainter reset(){
             // Reset the pixel grid painter
         getPixelGridPainter().reset();
+            // Reset the background painter
+        getBackgroundPainter().reset();
         return setFlags(DEFAULT_FLAG_SETTINGS)
                 .setRambleyEyes(0.0, 0.0)
                 .setRambleyOpenMouthHeight(0.0)
-                .setRambleyOpenMouthWidth(1.0)
-                .setBackgroundDotSize(DEFAULT_BACKGROUND_DOT_SIZE)
-                .setBackgroundDotSpacing(DEFAULT_BACKGROUND_DOT_SPACING);
+                .setRambleyOpenMouthWidth(1.0);
     }
     /**
      * This is a handler to listen to the delegate painters for RambleyPainter 
