@@ -1197,8 +1197,8 @@ public class Rambley4J extends JFrame {
                 heightSpinner.getValue()));
         bgDotSizeSpinner.setValue(rambleyPainter.getBackgroundDotSize());
         bgDotSpacingSpinner.setValue(rambleyPainter.getBackgroundDotSpacing());
-        gridSpacingSpinner.setValue(rambleyPainter.getPixelGridLineSpacing());
-        gridThicknessSpinner.setValue(rambleyPainter.getPixelGridLineThickness());
+        gridSpacingSpinner.setValue(rambleyPainter.getPixelGridPainter().getLineSpacing());
+        gridThicknessSpinner.setValue(rambleyPainter.getPixelGridPainter().getLineThickness());
         double eyeRX = rambleyPainter.getRambleyRightEyeX() * 100;
         double eyeRY = rambleyPainter.getRambleyRightEyeY() * 100;
         double eyeLX = rambleyPainter.getRambleyLeftEyeX() * 100;
