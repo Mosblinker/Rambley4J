@@ -5902,8 +5902,8 @@ public class RambleyPainter extends ListenedPainter<Component>{
          */
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-                // If the source is the pixel grid painter
-            if (evt.getSource() == pixelGridPainter)
+                // If the source is the pixel grid painter or the background painter
+            if (evt.getSource() == pixelGridPainter || evt.getSource() == bgPainter)
                 firePropertyChange(evt.getPropertyName(),evt.getOldValue(),
                         evt.getNewValue());
         }
