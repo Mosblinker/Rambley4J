@@ -179,7 +179,7 @@ public class Rambley4J extends JFrame {
         try{    // Try to load the settings from the preference node
             config = Preferences.userRoot().node(PREFERENCE_NODE_NAME);
             rambleyPainter.setFlags(config.getInt(RAMBLEY_FLAGS_KEY, 
-                    rambleyPainter.getFlags()));
+                    rambleyPainter.getFlags()) & RambleyPainter.MAXIMUM_VALID_FLAGS);
             bgDotSizeSpinner.setValue(config.getDouble(BACKGROUND_DOT_SIZE_KEY, 
                     rambleyPainter.getBackgroundDotSize()));
             bgDotSpacingSpinner.setValue(config.getDouble(BACKGROUND_DOT_SPACING_KEY, 
