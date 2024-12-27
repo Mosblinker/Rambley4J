@@ -44,6 +44,14 @@ public class BackgroundPainter extends ListenedPainter<Component>{
      */
     public static final int SQUARE_POLKA_DOTS = 2;
     /**
+     * This is the first valid value for the background polka dots shape.
+     */
+    public static final int FIRST_POLKA_DOTS_VALUE = RHOMBUS_POLKA_DOTS;
+    /**
+     * This is the last valid value for the background polka dots shape.
+     */
+    public static final int LAST_POLKA_DOTS_VALUE = SQUARE_POLKA_DOTS;
+    /**
      * This is the default width and height of the background polka dots.
      */
     protected static final double DEFAULT_BACKGROUND_DOT_SIZE = 8.0;
@@ -213,6 +221,7 @@ public class BackgroundPainter extends ListenedPainter<Component>{
      * This sets the shape used for the background polka dots.
      * @param shape The shape of the background polka dots.
      * @return This {@code BackgroundPainter}.
+     * @throws IllegalArgumentException If the shape is not a valid shape.
      * @see #getPolkaDotSize 
      * @see #setPolkaDotSize 
      * @see #getPolkaDotSpacing 
@@ -223,6 +232,9 @@ public class BackgroundPainter extends ListenedPainter<Component>{
      * @see #SQUARE_POLKA_DOTS
      */
     public BackgroundPainter setPolkaDotShape(int shape){
+            // If the shape value is out of the valid range for the shape
+        if (shape < FIRST_POLKA_DOTS_VALUE || shape > LAST_POLKA_DOTS_VALUE)
+            throw new IllegalArgumentException("Invalid polka dot shape value: " + shape);
             // If the new shape is different from the old shape
         if (shape != dotShape){
                 // Get the old dot shape
