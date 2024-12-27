@@ -179,7 +179,7 @@ public class RambleyPainterTester extends javax.swing.JFrame {
         gridToggle.setSelected(rambley.isPixelGridPainted());
         evilToggle.setSelected(rambley.isRambleyEvil());
         ratioToggle.setSelected(!rambley.isAspectRatioIgnored());
-        bgShapeCombo.setSelectedIndex(rambley.getCircularBackgroundDots() ? 1 : 0);
+        bgShapeCombo.setSelectedIndex(rambley.getBackgroundPainter().getPolkaDotShape());
         shadowToggle.setSelected(rambley.isRambleyShadowPainted());
         outlineToggle.setSelected(rambley.isRambleyOutlinePainted());
         heightSpinner.setEnabled(!linkSizeToggle.isSelected());
@@ -1135,7 +1135,7 @@ public class RambleyPainterTester extends javax.swing.JFrame {
     }//GEN-LAST:event_leftEyeControlStateChanged
 
     private void bgShapeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bgShapeComboActionPerformed
-        rambley.setCircularBackgroundDots(bgShapeCombo.getSelectedIndex() > 0);
+        rambley.getBackgroundPainter().setPolkaDotShape(bgShapeCombo.getSelectedIndex());
     }//GEN-LAST:event_bgShapeComboActionPerformed
     
     /**
