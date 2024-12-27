@@ -51,6 +51,7 @@ public class Rambley4J extends JFrame {
         "Thumbnailator - coobird - https://github.com/coobird/thumbnailator",
         "SwingExtended - Mosblinker - https://github.com/Mosblinker/SwingExtended",
         "FilesExtended - Mosblinker - https://github.com/Mosblinker/FilesExtended",
+        "GeomArt4J - Mosblinker - https://github.com/Mosblinker/GeomArt4J",
         "                       ---- Special Thanks ----",
         "Special thanks to UniqueGeese and his team for creating Indigo Park and",
         "    thus Rambley.",
