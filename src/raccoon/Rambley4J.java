@@ -186,9 +186,9 @@ public class Rambley4J extends JFrame {
                     rambleyPainter.getBackgroundDotSpacing()));
             // Insert setting bgDotsComboBox from BACKGROUND_DOT_SHAPE_KEY here
             gridSpacingSpinner.setValue(config.getDouble(PIXEL_GRID_SPACING_KEY, 
-                    rambleyPainter.getPixelGridLineSpacing()));
+                    rambleyPainter.getPixelGridPainter().getLineSpacing()));
             gridThicknessSpinner.setValue(config.getFloat(PIXEL_GRID_THICKNESS_KEY, 
-                    rambleyPainter.getPixelGridLineThickness()));
+                    rambleyPainter.getPixelGridPainter().getLineThickness()));
             double eyeRX = config.getDouble(RAMBLEY_RIGHT_EYE_X_KEY, 
                     rambleyPainter.getRambleyRightEyeX());
             double eyeRY = config.getDouble(RAMBLEY_RIGHT_EYE_Y_KEY, 
@@ -1150,11 +1150,11 @@ public class Rambley4J extends JFrame {
     }//GEN-LAST:event_printButtonActionPerformed
 
     private void gridSpacingSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_gridSpacingSpinnerStateChanged
-        rambleyPainter.setPixelGridLineSpacing((double)gridSpacingSpinner.getValue());
+        rambleyPainter.getPixelGridPainter().setLineSpacing((double)gridSpacingSpinner.getValue());
     }//GEN-LAST:event_gridSpacingSpinnerStateChanged
 
     private void gridThicknessSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_gridThicknessSpinnerStateChanged
-        rambleyPainter.setPixelGridLineThickness((float)gridThicknessSpinner.getValue());
+        rambleyPainter.getPixelGridPainter().setLineThickness((float)gridThicknessSpinner.getValue());
     }//GEN-LAST:event_gridThicknessSpinnerStateChanged
 
     private void bgDotSizeSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bgDotSizeSpinnerStateChanged
@@ -1459,11 +1459,11 @@ public class Rambley4J extends JFrame {
                             // TODO: BACKGROUND_DOT_SHAPE_KEY goes here
                             case(PixelGridPainter.LINE_SPACING_PROPERTY_CHANGED):
                                 config.putDouble(PIXEL_GRID_SPACING_KEY, 
-                                        rambleyPainter.getPixelGridLineSpacing());
+                                        rambleyPainter.getPixelGridPainter().getLineSpacing());
                                 break;
                             case(PixelGridPainter.LINE_THICKNESS_PROPERTY_CHANGED):
                                 config.putFloat(PIXEL_GRID_THICKNESS_KEY, 
-                                        rambleyPainter.getPixelGridLineThickness());
+                                        rambleyPainter.getPixelGridPainter().getLineThickness());
                                 break;
                             case(RambleyPainter.RAMBLEY_RIGHT_EYE_X_PROPERTY_CHANGED):
                                 config.putDouble(RAMBLEY_RIGHT_EYE_X_KEY, 
