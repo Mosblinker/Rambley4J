@@ -34,15 +34,15 @@ public class BackgroundPainter extends ListenedPainter<Component>{
     /**
      * This indicates that the background polka dots will be rhombuses.
      */
-    public static final int RHOMBUS_BACKGROUND_DOTS = 0;
+    public static final int RHOMBUS_POLKA_DOTS = 0;
     /**
      * This indicates that the background polka dots will be circles.
      */
-    public static final int CIRCLE_BACKGROUND_DOTS = 1;
+    public static final int CIRCLE_POLKA_DOTS = 1;
     /**
      * This indicates that the background polka dots will be squares.
      */
-    public static final int SQUARE_BACKGROUND_DOTS = 2;
+    public static final int SQUARE_POLKA_DOTS = 2;
     /**
      * This is the default width and height of the background polka dots.
      */
@@ -58,25 +58,25 @@ public class BackgroundPainter extends ListenedPainter<Component>{
      * This is the default shape of the background polka dots. By default, they 
      * are rhombuses.
      */
-    protected static final int DEFAULT_BACKGROUND_DOT_SHAPE = 
-            RHOMBUS_BACKGROUND_DOTS;
+    protected static final int DEFAULT_POLKA_DOT_SHAPE = 
+            RHOMBUS_POLKA_DOTS;
     /**
      * This identifies that a change has been made to the width and height of 
      * the background polka dots.
      */
-    public static final String BACKGROUND_DOT_SIZE_PROPERTY_CHANGED = 
+    public static final String POLKA_DOT_SIZE_PROPERTY_CHANGED = 
             "BackgroundDotSizePropertyChanged"; 
     /**
      * This identifies that a change has been made to the spacing of the 
      * background polka dots.
      */
-    public static final String BACKGROUND_DOT_SPACING_PROPERTY_CHANGED = 
+    public static final String POLKA_DOT_SPACING_PROPERTY_CHANGED = 
             "BackgroundDotSpacingPropertyChanged"; 
     /**
      * This identifies that a change has been made to the shape of the 
      * background polka dots.
      */
-    public static final String BACKGROUND_DOT_SHAPE_PROPERTY_CHANGED = 
+    public static final String POLKA_DOT_SHAPE_PROPERTY_CHANGED = 
             "BackgroundDotShapePropertyChanged";
     /**
      * The width and height of the background polka dots.
@@ -114,7 +114,7 @@ public class BackgroundPainter extends ListenedPainter<Component>{
     public BackgroundPainter(){
         dotSize = DEFAULT_BACKGROUND_DOT_SIZE;
         dotSpacing = DEFAULT_BACKGROUND_DOT_SPACING;
-        dotShape = DEFAULT_BACKGROUND_DOT_SHAPE;
+        dotShape = DEFAULT_POLKA_DOT_SHAPE;
     }
     
 
