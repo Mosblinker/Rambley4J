@@ -93,23 +93,30 @@ public class BackgroundPainter extends ListenedPainter<Component>{
      * This is a value controlling the shape of the background polka dots.
      */
     private int dotShape;
-    /**
-     * This is the main background color for the background painter.
-     */
-    private Color color;
-    /**
-     * This is the color for the background polka dots.
-     */
-    private Color dotColor;
-    /**
-     * This is the color for the top half of the background gradient.
-     */
-    private Color gradientColor;
-    /**
-     * This is the bottom color for the background gradient. This is a 
-     * transparent version of {@code gradientColor}.
-     */
-    private Color gradientColor2;
+//    /**
+//     * This is the main background color for the background painter.
+//     */
+//    private Color color;
+//    /**
+//     * This is the color for the background polka dots.
+//     */
+//    private Color dotColor;
+//    /**
+//     * This is the color for the top half of the background gradient.
+//     */
+//    private Color gradientColor;
+//    /**
+//     * This is the bottom color for the background gradient. This is a 
+//     * transparent version of {@code gradientColor}.
+//     */
+//    private Color gradientColor2;
+    
+    public BackgroundPainter(){
+        dotSize = DEFAULT_BACKGROUND_DOT_SIZE;
+        dotSpacing = DEFAULT_BACKGROUND_DOT_SPACING;
+        dotShape = DEFAULT_BACKGROUND_DOT_SHAPE;
+    }
+    
 
     @Override
     public void paint(Graphics2D g, Component object, int width, int height) {
