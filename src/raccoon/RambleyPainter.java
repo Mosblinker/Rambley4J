@@ -11,7 +11,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.function.DoubleUnaryOperator;
-import static raccoon.BackgroundPainter.*;
 import swing.ListenedPainter;
 
 /**
@@ -230,11 +229,6 @@ public class RambleyPainter extends ListenedPainter<Component>{
      * @see #getRambleyY() 
      */
     private static final double RAMBLEY_Y_OFFSET_2 = 80;
-    /**
-     * This is the width and height at which the background dots are drawn at 
-     * internally.
-     */
-    private static final double INTERNAL_BG_DOT_RENDER_SIZE = 256;
     /**
      * This is the angle of elevation for Rambley's cheeks.
      */
@@ -857,16 +851,6 @@ public class RambleyPainter extends ListenedPainter<Component>{
     */
     
     /**
-     * A Rhombus2D object used to draw the background polka dots. This is 
-     * initially null and is initialized the first time it is used.
-     */
-    private Rhombus2D bgRhombus = null;
-    /**
-     * An Ellipse2D object used to draw the background polka dots. This is 
-     * initially null and is initialized the first time it is used.
-     */
-    private Ellipse2D bgEllipse = null;
-    /**
      * An Ellipse2D object used to render Rambley's irises. This is initially 
      * null and is initialized the first time it is used.
      */
@@ -1443,46 +1427,6 @@ public class RambleyPainter extends ListenedPainter<Component>{
      */
     public RambleyPainter setRambleyShadowPainted(boolean enabled){
         return setFlag(PAINT_RAMBLEY_SHADOW_FLAG,enabled);
-    }
-    /**
-     * This returns whether the polka dots in the background will be circles or 
-     * rhombuses. If this is {@code true}, then the background polka dots will 
-     * be circles. If this is {@code false} then the background polka dots will 
-     * be rhombuses. The default value for this is {@code false}.
-     * 
-     * @todo Add references to other related methods.
-     * 
-     * @return {@code true} if the background polka dots are circles, {@code 
-     * false} if the background polka dots are rhombuses.
-     * @see #getFlag 
-     * @see #setCircularBackgroundDots
-     * @deprecated Get the background shape from the BackgroundPainter instead
-     */
-    @Deprecated
-    public boolean getCircularBackgroundDots(){
-        return getBackgroundPainter().getPolkaDotShape() == BackgroundPainter.CIRCLE_POLKA_DOTS;
-    }
-    /**
-     * This sets whether the polka dots in the background will be circles or 
-     * rhombuses. If this is {@code true}, then the background polka dots will 
-     * be circles. If this is {@code false} then the background polka dots will 
-     * be rhombuses. The default value for this is {@code false}.
-     * 
-     * @todo Add references to other related methods.
-     * 
-     * @param value {@code true} if the background polka dots should be circles, 
-     * {@code false} if the background polka dots should be rhombuses.
-     * @return This {@code RambleyPainter}.
-     * @see #setFlag 
-     * @see #getCircularBackgroundDots
-     * @deprecated set the background shape using the BackgroundPainter instead
-     */
-    @Deprecated
-    public RambleyPainter setCircularBackgroundDots(boolean value){
-        getBackgroundPainter().setPolkaDotShape(
-                (value)?BackgroundPainter.CIRCLE_POLKA_DOTS:
-                        BackgroundPainter.RHOMBUS_POLKA_DOTS);
-        return this;
     }
     /**
      * This returns whether certain elements of Rambley will appear on the 
@@ -2367,105 +2311,6 @@ public class RambleyPainter extends ListenedPainter<Component>{
     
     
     /**
-     * This returns the gradient to use to paint the background gradient. The 
-     * gradient goes from {@link BACKGROUND_GRADIENT_COLOR} at the top to {@link 
-     * BACKGROUND_GRADIENT_COLOR_2} at the bottom throughout the area to fill.
-     * @param x The x-coordinate of the top-left corner of the area to fill.
-     * @param y The y-coordinate of the top-left corner of the area to fill.
-     * @param w The width of the area to fill.
-     * @param h The height of the area to fill.
-     * @return The gradient to use to paint the background gradient.
-     * @see BACKGROUND_GRADIENT_COLOR
-     * @see BACKGROUND_GRADIENT_COLOR_2
-     * @see #paintBackground 
-     */
-    protected Paint getBackgroundGradient(double x,double y,double w,double h){
-            // Get the center x-coordinate
-        float x1 = (float)((w / 2.0)+x);
-            // Create a vertical gradient that fades from the background 
-            // gradient color to transparency over the area to fill
-        return new GradientPaint(x1,(float)y,BACKGROUND_GRADIENT_COLOR,
-                x1,(float)(y+h-1),BACKGROUND_GRADIENT_COLOR_2);
-    }
-    /**
-     * This is used to calculate the offset for the background polka dots using 
-     * the given size value.
-     * @param size The value to use to get the offset.
-     * @return The offset for the background polka dots.
-     * @see getBackgroundDotOffsetX
-     * @see getBackgroundDotOffsetY
-     * @see getBackgroundDotSpacing
-     */
-    private double getBackgroundDotOffset(double size){
-        return (size%getBackgroundDotSpacing())/2.0;
-    }
-    /**
-     * This returns the x offset to use for the background polka dots. 
-     * 
-     * @implSpec The default implementation is equivalent to {@code (width % }
-     * {@link getBackgroundDotSpacing() getBackgroundDotSpacing()}{@code )/2.0}.
-     * 
-     * @param width The width of the area to fill with the background.
-     * @return The offset for the x-coordinate of the background polka dots.
-     * @see #getBackgroundDotOffsetY 
-     * @see #getBackgroundDot 
-     * @see #paintBackgroundDots
-     * @see getBackgroundDotSpacing
-     * @see setBackgroundDotSpacing
-     */
-    protected double getBackgroundDotOffsetX(double width){
-        return getBackgroundDotOffset(width);
-    }
-    /**
-     * This returns the y offset to use for the background polka dots. 
-     * 
-     * @implSpec The default implementation is equivalent to {@code (height % }
-     * {@link getBackgroundDotSpacing() getBackgroundDotSpacing()}{@code )/2.0}.
-     * 
-     * @param height The height of the area to fill with the background.
-     * @return The offset for the y-coordinate of the background polka dots.
-     * @see #getBackgroundDotOffsetX 
-     * @see #getBackgroundDot 
-     * @see #paintBackgroundDots 
-     * @see getBackgroundDotSpacing
-     * @see setBackgroundDotSpacing
-     */
-    protected double getBackgroundDotOffsetY(double height){
-        return getBackgroundDotOffset(height);
-    }
-    /**
-     * This creates and returns the shape to use to draw a background polka dot 
-     * centered at the given x and y coordinates. The background polka dot will 
-     * be the width and height set for the {@link #getBackgroundDotSize() 
-     * background polka dot size}. If the background polka dots are {@link 
-     * #getCircularBackgroundDots circular}, then the shape returned will be a 
-     * circle. Otherwise, the shape returned will be a rhombus.
-     * @param x The x-coordinate for the center of the background polka dot.
-     * @param y The y-coordinate for the center of the background polka dot.
-     * @return The shape object to use to draw a background polka dot.
-     * @see #getCircularBackgroundDots
-     * @see #setCircularBackgroundDots 
-     * @see #getBackgroundDotSize 
-     * @see #setBackgroundDotSize 
-     * @see #paintBackgroundDots 
-     */
-    protected Shape getBackgroundDot(double x, double y){
-            // This gets the shape that will be used to render the background 
-            // dots
-        RectangularShape shape;
-            // If the background dots should be circular
-        if (getCircularBackgroundDots())
-            shape = bgEllipse;
-        else 
-            shape = bgRhombus;
-            // Get half of the set size for a background polka dot
-        double halfSize = getBackgroundDotSize() / 2.0;
-            // Set the frame of the shape from the center to be the size of a 
-            // background polka dot.
-        shape.setFrameFromCenter(x, y, x-halfSize, y-halfSize);
-        return shape;
-    }
-    /**
      * This is used to render the background. The area is first filled with a 
      * solid {@link BACKGROUND_COLOR light blue} color. After that, the 
      * background polka dots are drawn using the {@link paintBackgroundDots 
@@ -2491,82 +2336,6 @@ public class RambleyPainter extends ListenedPainter<Component>{
             // Paint the background using the background painter
         getBackgroundPainter().paint(g, c, w, h);
             // Dispose of the copy of the graphics context
-        g.dispose();
-    }
-    /**
-     * This is used to render the background polka dots. The background polka 
-     * dots will be drawn in a {@link BACKGROUND_DOT_COLOR dark blue} color. 
-     * Each polka dot will be {@link getBackgroundDot getBackgroundDot()} in 
-     * width and height, and will be spaced diagonally by {@link 
-     * #getBackgroundDotSpacing getBackgroundDotSpacing}. The polka dots will be 
-     * either circular or rhombus-shaped, depending on whether {@link 
-     * #getCircularBackgroundDots getCircularBackgroundDots} is set to {@code 
-     * true} or not. Each polka dot is generated using the {@link 
-     * #getBackgroundDot getBackgroundDot} method. The polka dots will be offset 
-     * horizontally by {@link #getBackgroundDotOffsetX getBackgroundDotOffsetX} 
-     * and vertically by {@link #getBackgroundDotOffsetY 
-     * getBackgroundDotOffsetY}. This renders to a copy of the given graphics 
-     * context, so as to protect the rest of the paint code from changes made to 
-     * the graphics context while rendering the background polka dots.
-     * @param g The graphics context to render to.
-     * @param x The x-coordinate of the top-left corner of the area to fill.
-     * @param y The y-coordinate of the top-left corner of the area to fill.
-     * @param w The width of the area to fill.
-     * @param h The height of the area to fill.
-     * @see #paint 
-     * @see #paintBackground 
-     * @see BACKGROUND_DOT_COLOR
-     * @see #getBackgroundDot 
-     * @see #getBackgroundDotOffsetX 
-     * @see #getBackgroundDotOffsetY 
-     * @see #getBackgroundDotSize 
-     * @see #getBackgroundDotSpacing 
-     * @see #getCircularBackgroundDots 
-     * @see #setCircularBackgroundDots 
-     * @see #isBackgroundPainted 
-     * @see #setBackgroundPainted 
-     */
-    protected void paintBackgroundDots(Graphics2D g, int x, int y, int w, int h){
-            // Create a copy of the given graphics context over the given area
-        g = (Graphics2D) g.create(x, y, w, h);
-        // Lazy way to implement the scaling of the background dots, but it works
-            // Get the scale for the background dots
-        double scale = Math.min(w, h) / INTERNAL_BG_DOT_RENDER_SIZE;
-            // Scale the background dots
-        g.scale(scale, scale);
-            // Scale the width
-        w /= scale;
-            // Scale the height
-        h /= scale;
-            // Set the color to the background polka dot color
-        g.setColor(BACKGROUND_DOT_COLOR);
-            // If the background scratch Ellipse2D object has not been 
-        if (bgEllipse == null)   // initialized yet
-            bgEllipse = new Ellipse2D.Double();
-            // If the background scratch Rhombus2D object has not been 
-        if (bgRhombus == null)  // initialized yet
-            bgRhombus = new Rhombus2D.Double();
-            // Get the x offset for the background polka dots
-        double x1 = getBackgroundDotOffsetX(w);
-            // Get the y offset for the background polka dots
-        double y1 = getBackgroundDotOffsetY(h);
-            // Go through the multipliers for the y-coordinates for the centers 
-            // of the background polka dots (to create the polka dot pattern, 
-            // we need to know what row number we are on, so we can offset the 
-            // x-coordinates accordingly)
-        for (int i = 0; (i * getBackgroundDotSpacing()) <= h; i++){
-                // Get the y-coordinate for the centers of the polka dots on 
-                // this row
-            double yDot = (i * getBackgroundDotSpacing())+y1;
-                // Go through the x-coordinates for the centers of the 
-                // background polka dots (polka dots on odd rows are offset 
-                // compared to the polka dots on even rows)
-            for (double xDot = getBackgroundDotSpacing() * (i % 2); xDot <= w; 
-                    xDot+=getBackgroundDotSpacing()+getBackgroundDotSpacing()){
-                    // Fill the current background polka dot
-                g.fill(getBackgroundDot(xDot+x1,yDot));
-            }
-        }   // Dispose of the copy of the graphics context
         g.dispose();
     }
     
