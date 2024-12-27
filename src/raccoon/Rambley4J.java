@@ -839,7 +839,7 @@ public class Rambley4J extends JFrame {
         bgDotsShapeLabel.setLabelFor(bgDotsShapeCombo);
         bgDotsShapeLabel.setText("Shape:");
 
-        bgDotsShapeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Rhombus", "Circle" }));
+        bgDotsShapeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Rhombus", "Circle", "Square" }));
         bgDotsShapeCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bgDotsShapeComboActionPerformed(evt);
