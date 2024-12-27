@@ -4,7 +4,9 @@
  */
 package raccoon;
 
+import geom.Rhombus2D;
 import java.awt.*;
+import java.awt.geom.*;
 import swing.ListenedPainter;
 
 /**
@@ -118,6 +120,27 @@ public class BackgroundPainter extends ListenedPainter<Component>{
 //     * transparent version of {@code gradientColor}.
 //     */
 //    private Color gradientColor2;
+    /**
+     * A scratch Rectangle2D object used for rendering the background. This is 
+     * initialized the first time it is used. This scratch object may change at 
+     * any time during the rendering process, and should not be assumed to be in 
+     * a known state before being used.
+     */
+    private Rectangle2D rect = null;
+    /**
+     * A scratch Ellipse2D object used for rendering the background. This is 
+     * initialized the first time it is used. This scratch object may change at 
+     * any time during the rendering process, and should not be assumed to be in 
+     * a known state before being used.
+     */
+    private Ellipse2D ellipse = null;
+    /**
+     * This is a scratch Rhombus2D object used for rendering the background. 
+     * This is initialized the first time it is used. This scratch object may 
+     * change at any time during the rendering process, and should not be 
+     * assumed to be in a known state before being used.
+     */
+    private Rhombus2D rhombus = null;
     
     public BackgroundPainter(){
         dotSize = DEFAULT_BACKGROUND_DOT_SIZE;
