@@ -11,6 +11,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.function.DoubleUnaryOperator;
+import static raccoon.BackgroundPainter.*;
 import swing.ListenedPainter;
 
 /**
@@ -24,25 +25,6 @@ import swing.ListenedPainter;
  * @author AnimalWave on Discord
  */
 public class RambleyPainter extends ListenedPainter<Component>{
-    /**
-     * This is the main color for the background.
-     */
-    public static final Color BACKGROUND_COLOR = new Color(0x2CDFFF);
-    /**
-     * This is the color for the polka dots in the background.
-     */
-    public static final Color BACKGROUND_DOT_COLOR = new Color(0x1A73C9);
-    /**
-     * This is the color for the background gradient. The background gradient 
-     * fades from this color to transparency.
-     */
-    public static final Color BACKGROUND_GRADIENT_COLOR = new Color(0x0068FF);
-    /**
-     * This is the color which the background gradient fades into. This is a 
-     * transparent color.
-     */
-    protected static final Color BACKGROUND_GRADIENT_COLOR_2 = 
-            new Color(BACKGROUND_GRADIENT_COLOR.getRGB()&0x00FFFFFF,true);
     /**
      * This is the main color of Rambley the Raccoon. That is to say, this is 
      * the color which most of Rambley's body is comprised of.

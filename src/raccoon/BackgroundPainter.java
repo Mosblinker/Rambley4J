@@ -8,10 +8,29 @@ import java.awt.*;
 import swing.ListenedPainter;
 
 /**
- *
+ * This is a Painter that paints the background behind Rambley the Raccoon.
  * @author Mosblinker
  */
 public class BackgroundPainter extends ListenedPainter<Component>{
+    /**
+     * This is the main color for the background.
+     */
+    public static final Color BACKGROUND_COLOR = new Color(0x2CDFFF);
+    /**
+     * This is the color for the polka dots in the background.
+     */
+    public static final Color BACKGROUND_DOT_COLOR = new Color(0x1A73C9);
+    /**
+     * This is the color for the background gradient. The background gradient 
+     * fades from this color to transparency.
+     */
+    public static final Color BACKGROUND_GRADIENT_COLOR = new Color(0x0068FF);
+    /**
+     * This is the color which the background gradient fades into. This is a 
+     * transparent color.
+     */
+    protected static final Color BACKGROUND_GRADIENT_COLOR_2 = 
+            new Color(BACKGROUND_GRADIENT_COLOR.getRGB()&0x00FFFFFF,true);
     
     
     
