@@ -25,7 +25,7 @@ import javax.swing.*;
 /**
  * This is a program that renders Rambley the Raccoon.
  * @author Mosblinker
- * @version 0.7.0
+ * @version 0.8.1
  */
 public class Rambley4J extends JFrame {
     /**
