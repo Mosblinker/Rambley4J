@@ -108,10 +108,10 @@ public class RambleyPainterTester extends javax.swing.JFrame {
             linkSizeToggle.setSelected(config.getBoolean(LINK_PAINTER_SIZE_KEY, 
                     Objects.equals(widthSpinner.getValue(), heightSpinner.getValue())));
             bgDotSizeSpinner.setValue(config.getDouble(
-                    RambleyPainter.BACKGROUND_DOT_SIZE_PROPERTY_CHANGED, 
+                    BackgroundPainter.POLKA_DOT_SIZE_PROPERTY_CHANGED, 
                     rambley.getBackgroundDotSize()));
             bgDotSpacingSpinner.setValue(config.getDouble(
-                    RambleyPainter.BACKGROUND_DOT_SPACING_PROPERTY_CHANGED, 
+                    BackgroundPainter.POLKA_DOT_SPACING_PROPERTY_CHANGED, 
                     rambley.getBackgroundDotSpacing()));
             pGridSpinner.setValue(config.getDouble(
                     PixelGridPainter.LINE_SPACING_PROPERTY_CHANGED, 

@@ -649,13 +649,6 @@ public class RambleyPainter extends ListenedPainter<Component>{
     public static final String IGNORE_ASPECT_RATIO_PROPERTY_CHANGED = 
             "IgnoreAspectRatioPropertyChanged";
     /**
-     * This identifies that a change has been made to whether the background 
-     * polka dots are circular or rhombuses.
-     * @see CIRCULAR_BACKGROUND_DOTS_FLAG
-     */
-    public static final String CIRCULAR_BACKGROUND_DOTS_PROPERTY_CHANGED = 
-            "CircularDotsPropertyChanged";
-    /**
      * This identifies that a change has been made to whether Rambley is 
      * glitching out or not.
      * @see GLITCHY_RAMBLEY_FLAG
@@ -717,7 +710,7 @@ public class RambleyPainter extends ListenedPainter<Component>{
                 IGNORE_ASPECT_RATIO_PROPERTY_CHANGED);
         nameMap.put(EVIL_RAMBLEY_FLAG, EVIL_RAMBLEY_PROPERTY_CHANGED);
         nameMap.put(CIRCULAR_BACKGROUND_DOTS_FLAG, 
-                CIRCULAR_BACKGROUND_DOTS_PROPERTY_CHANGED);
+                BackgroundPainter.POLKA_DOT_SHAPE_PROPERTY_CHANGED);
         nameMap.put(RAMBLEY_FLIPPED_FLAG, RAMBLEY_FLIPPED_PROPERTY_CHANGED);
         nameMap.put(RAMBLEY_JAW_CLOSED_FLAG, 
                 RAMBLEY_JAW_CLOSED_PROPERTY_CHANGED);
@@ -737,18 +730,6 @@ public class RambleyPainter extends ListenedPainter<Component>{
      */
     public static final NavigableMap<Integer, String> FLAG_PROPERTY_NAMES_MAP = 
             generateFlagNameMap();
-    /**
-     * This identifies that a change has been made to the width and height of 
-     * the background polka dots.
-     */
-    public static final String BACKGROUND_DOT_SIZE_PROPERTY_CHANGED = 
-            "BackgroundDotSizePropertyChanged"; 
-    /**
-     * This identifies that a change has been made to the spacing of the 
-     * background polka dots.
-     */
-    public static final String BACKGROUND_DOT_SPACING_PROPERTY_CHANGED = 
-            "BackgroundDotSpacingPropertyChanged"; 
     /**
      * 
      */
@@ -807,10 +788,6 @@ public class RambleyPainter extends ListenedPainter<Component>{
      * center of another background polka dot.
      */
     private double dotSpacing;
-    /**
-     * This is the 
-     */
-    private int dotShape;
     /**
      * This is a PixelGridPainter used to paint the pixel grid effect.
      */
@@ -1702,7 +1679,7 @@ public class RambleyPainter extends ListenedPainter<Component>{
                 // Get the old size
             double old = dotSize;
             dotSize = size;
-            firePropertyChange(BACKGROUND_DOT_SIZE_PROPERTY_CHANGED,old,size);
+            firePropertyChange(BackgroundPainter.POLKA_DOT_SIZE_PROPERTY_CHANGED,old,size);
         }
         return this;
     }
@@ -1752,7 +1729,7 @@ public class RambleyPainter extends ListenedPainter<Component>{
                 // Get the old dot spacing
             double old = dotSpacing;
             dotSpacing = spacing;
-            firePropertyChange(BACKGROUND_DOT_SPACING_PROPERTY_CHANGED,old,spacing);
+            firePropertyChange(BackgroundPainter.POLKA_DOT_SPACING_PROPERTY_CHANGED,old,spacing);
         }
         return this;
     }

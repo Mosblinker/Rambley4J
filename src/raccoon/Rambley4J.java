@@ -1448,11 +1448,11 @@ public class Rambley4J extends JFrame {
                         updateStateInSettings();
                     } else {
                         switch(evt.getPropertyName()){
-                            case(RambleyPainter.BACKGROUND_DOT_SIZE_PROPERTY_CHANGED):
+                            case(BackgroundPainter.POLKA_DOT_SIZE_PROPERTY_CHANGED):
                                 config.putDouble(BACKGROUND_DOT_SIZE_KEY, 
                                         rambleyPainter.getBackgroundDotSize());
                                 break;
-                            case(RambleyPainter.BACKGROUND_DOT_SPACING_PROPERTY_CHANGED):
+                            case(BackgroundPainter.POLKA_DOT_SPACING_PROPERTY_CHANGED):
                                 config.putDouble(BACKGROUND_DOT_SPACING_KEY, 
                                         rambleyPainter.getBackgroundDotSpacing());
                                 break;
