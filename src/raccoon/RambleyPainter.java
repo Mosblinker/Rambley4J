@@ -231,17 +231,6 @@ public class RambleyPainter extends ListenedPainter<Component>{
      */
     private static final double RAMBLEY_Y_OFFSET_2 = 80;
     /**
-     * This is the default width and height of the background polka dots.
-     */
-    protected static final double DEFAULT_BACKGROUND_DOT_SIZE = 8.0;
-    /**
-     * This is the default diagonal spacing between the centers of the 
-     * background polka dots. Refer to the documentation for the {@link 
-     * #getBackgroundDotSpacing getBackgroundDotSpacing} method for a more in
-     * depth description on the background polka dot spacing.
-     */
-    protected static final double DEFAULT_BACKGROUND_DOT_SPACING = 12.0;
-    /**
      * This is the width and height at which the background dots are drawn at 
      * internally.
      */
@@ -770,17 +759,6 @@ public class RambleyPainter extends ListenedPainter<Component>{
      */
     private Handler handler;
     /**
-     * The width and height of the background polka dots.
-     */
-    private double dotSize;
-    /**
-     * This is the diagonal spacing between the centers of the background polka 
-     * dots. That is to say, the center of each background polka dot is {@code 
-     * dotSpacing} pixels to the left and {@code dotSpacing} pixels below the 
-     * center of another background polka dot.
-     */
-    private double dotSpacing;
-    /**
      * This is a BackgroundPainter used to paint the background.
      */
     private BackgroundPainter bgPainter;
@@ -1089,8 +1067,6 @@ public class RambleyPainter extends ListenedPainter<Component>{
     public RambleyPainter(){
         flags = DEFAULT_FLAG_SETTINGS;
         handler = new Handler();
-        dotSize = DEFAULT_BACKGROUND_DOT_SIZE;
-        dotSpacing = DEFAULT_BACKGROUND_DOT_SPACING;
         bgPainter = new BackgroundPainter();
         bgPainter.addPropertyChangeListener(handler);
         pixelGridPainter = new PixelGridPainter();
