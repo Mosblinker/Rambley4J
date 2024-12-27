@@ -116,8 +116,123 @@ public class BackgroundPainter extends ListenedPainter<Component>{
         dotSpacing = DEFAULT_BACKGROUND_DOT_SPACING;
         dotShape = DEFAULT_POLKA_DOT_SHAPE;
     }
+    /**
+     * This returns the width and height used for the background polka dots.
+     * @return The size of the background polka dots.
+     * @see #setPolkaDotSize 
+     * @see #getPolkaDotSpacing 
+     * @see #setPolkaDotSpacing 
+     * @see #getPolkaDotShape 
+     * @see #setPolkaDotShape 
+     */
+    public double getPolkaDotSize(){
+        return dotSize;
+    }
+    /**
+     * This sets the width and height used for the background polka dots. 
+     * @param size The size for the background polka dots. 
+     * @return This {@code BackgroundPainter}.
+     * @see #getPolkaDotSize 
+     * @see #getPolkaDotSpacing 
+     * @see #setPolkaDotSpacing 
+     * @see #getPolkaDotShape 
+     * @see #setPolkaDotShape 
+     */
+    public BackgroundPainter setPolkaDotSize(double size){
+            // If the new size is different from the old size
+        if (size != dotSize){
+                // Get the old size
+            double old = dotSize;
+            dotSize = size;
+            firePropertyChange(POLKA_DOT_SIZE_PROPERTY_CHANGED,old,size);
+        }
+        return this;
+    }
+    /**
+     * This returns the diagonal spacing between the centers of the background 
+     * polka dots. That is to say, the center of each background polka dot is 
+     * {@code getBackgroundDotSpacing()} pixels to the left and {@code 
+     * getBackgroundDotSpacing()} pixels below the center of the previous 
+     * background polka dot.
+     * 
+     * @todo Rework the documentation for this method.
+     * 
+     * @return The diagonal spacing between the background polka dots.
+     * @see #getPolkaDotSize 
+     * @see #setPolkaDotSize 
+     * @see #setPolkaDotSpacing 
+     * @see #getPolkaDotShape 
+     * @see #setPolkaDotShape 
+     */
+    public double getPolkaDotSpacing(){
+        return dotSpacing;
+    }
+    /**
+     * This sets the diagonal spacing between the centers of the background 
+     * polka dots. That is to say, the center of each background polka dot will  
+     * be {@code getBackgroundDotSpacing()} pixels to the left and {@code 
+     * getBackgroundDotSpacing()} pixels below the center of the previous 
+     * background polka dot.
+     * 
+     * @todo Rework the documentation for this method.
+     * 
+     * @param spacing The diagonal spacing between the background polka dots.
+     * @return This {@code BackgroundPainter}.
+     * @see #getPolkaDotSize 
+     * @see #setPolkaDotSize 
+     * @see #getPolkaDotSpacing 
+     * @see #getPolkaDotShape 
+     * @see #setPolkaDotShape 
+     */
+    public BackgroundPainter setPolkaDotSpacing(double spacing){
+            // If the new spacing is different from the old spacing
+        if (spacing != dotSpacing){
+                // Get the old dot spacing
+            double old = dotSpacing;
+            dotSpacing = spacing;
+            firePropertyChange(POLKA_DOT_SPACING_PROPERTY_CHANGED,old,spacing);
+        }
+        return this;
+    }
+    /**
+     * This returns the shape used for the background polka dots.
+     * @return The shape of the background polka dots.
+     * @see #getPolkaDotSize 
+     * @see #setPolkaDotSize 
+     * @see #getPolkaDotSpacing 
+     * @see #setPolkaDotSpacing 
+     * @see #setPolkaDotShape 
+     * @see #RHOMBUS_POLKA_DOTS
+     * @see #CIRCLE_POLKA_DOTS
+     * @see #SQUARE_POLKA_DOTS
+     */
+    public int getPolkaDotShape(){
+        return dotShape;
+    }
+    /**
+     * This sets the shape used for the background polka dots.
+     * @param shape The shape of the background polka dots.
+     * @return This {@code BackgroundPainter}.
+     * @see #getPolkaDotSize 
+     * @see #setPolkaDotSize 
+     * @see #getPolkaDotSpacing 
+     * @see #setPolkaDotSpacing 
+     * @see #getPolkaDotShape 
+     * @see #RHOMBUS_POLKA_DOTS
+     * @see #CIRCLE_POLKA_DOTS
+     * @see #SQUARE_POLKA_DOTS
+     */
+    public BackgroundPainter setPolkaDotShape(int shape){
+            // If the new shape is different from the old shape
+        if (shape != dotShape){
+                // Get the old dot shape
+            double old = dotShape;
+            dotShape = shape;
+            firePropertyChange(POLKA_DOT_SHAPE_PROPERTY_CHANGED,old,dotShape);
+        }
+        return this;
+    }
     
-
     @Override
     public void paint(Graphics2D g, Component object, int width, int height) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -192,12 +307,22 @@ public class BackgroundPainter extends ListenedPainter<Component>{
 //        g.dispose();
 //    }
     /**
+     * {@inheritDoc }
+     */
+    @Override
+    protected String paramString(){
+        return "dotShape="+getPolkaDotShape()+
+                ",dotSize="+getPolkaDotSize()+
+                ",dotSpacing="+getPolkaDotSpacing();
+    }
+    /**
      * This resets this BackgroundPainter, setting it's values to their 
      * defaults.
      * @return This {@code BackgroundPainter}.
      */
     public BackgroundPainter reset(){
-        // TODO: Reset the fields to their default values.
-        return this;
+        return setPolkaDotSize(DEFAULT_BACKGROUND_DOT_SIZE)
+                .setPolkaDotSpacing(DEFAULT_BACKGROUND_DOT_SPACING)
+                .setPolkaDotShape(DEFAULT_POLKA_DOT_SHAPE);
     }
 }
