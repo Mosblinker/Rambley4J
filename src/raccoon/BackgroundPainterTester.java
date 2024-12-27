@@ -28,7 +28,7 @@ public class BackgroundPainterTester extends javax.swing.JFrame {
         dotShapeCombo.setSelectedIndex(bgPainter.getPolkaDotShape());
         bgPainter.addPropertyChangeListener(new Handler());
         debugIcon = new DebuggingIcon(new BackgroundIcon(),debugToggle.isSelected());
-//        previewLabel.setIcon(debugIcon);
+        previewLabel.setIcon(debugIcon);
     }
 
     /**
