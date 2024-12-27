@@ -35,7 +35,7 @@ public class Rambley4J extends JFrame {
     /**
      * This is the version of the program.
      */
-    public static final String PROGRAM_VERSION = "0.7.0";
+    public static final String PROGRAM_VERSION = "0.8.1";
     /**
      * This is the credits for the program. This is currently private as I plan 
      * to rework it.
