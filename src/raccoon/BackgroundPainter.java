@@ -31,9 +31,18 @@ public class BackgroundPainter extends ListenedPainter<Component>{
      */
     protected static final Color BACKGROUND_GRADIENT_COLOR_2 = 
             new Color(BACKGROUND_GRADIENT_COLOR.getRGB()&0x00FFFFFF,true);
-    
-    
-    
+    /**
+     * This indicates that the background polka dots will be rhombuses.
+     */
+    public static final int RHOMBUS_BACKGROUND_DOTS = 0;
+    /**
+     * This indicates that the background polka dots will be circles.
+     */
+    public static final int CIRCLE_BACKGROUND_DOTS = 1;
+    /**
+     * This indicates that the background polka dots will be squares.
+     */
+    public static final int SQUARE_BACKGROUND_DOTS = 2;
     /**
      * This is the default width and height of the background polka dots.
      */
@@ -45,9 +54,12 @@ public class BackgroundPainter extends ListenedPainter<Component>{
      * depth description on the background polka dot spacing.
      */
     protected static final double DEFAULT_BACKGROUND_DOT_SPACING = 12.0;
-    
-    
-    
+    /**
+     * This is the default shape of the background polka dots. By default, they 
+     * are rhombuses.
+     */
+    protected static final int DEFAULT_BACKGROUND_DOT_SHAPE = 
+            RHOMBUS_BACKGROUND_DOTS;
     /**
      * This identifies that a change has been made to the width and height of 
      * the background polka dots.
@@ -60,9 +72,12 @@ public class BackgroundPainter extends ListenedPainter<Component>{
      */
     public static final String BACKGROUND_DOT_SPACING_PROPERTY_CHANGED = 
             "BackgroundDotSpacingPropertyChanged"; 
-    
-    
-    
+    /**
+     * This identifies that a change has been made to the shape of the 
+     * background polka dots.
+     */
+    public static final String BACKGROUND_DOT_SHAPE_PROPERTY_CHANGED = 
+            "BackgroundDotShapePropertyChanged";
     /**
      * The width and height of the background polka dots.
      */
@@ -74,7 +89,10 @@ public class BackgroundPainter extends ListenedPainter<Component>{
      * center of another background polka dot.
      */
     private double dotSpacing;
-    
+    /**
+     * This is a value controlling the shape of the background polka dots.
+     */
+    private int dotShape;
     private Color color;
     private Color dotColor;
     private Color gradientColor;
