@@ -2321,7 +2321,7 @@ public class RambleyPainter extends ListenedPainter<Component>{
             // If the background is to be painted
         if (isBackgroundPainted())
                 // Paint the background
-            paintBackground(g,0,0,width,height);
+            paintBackground(g,c,width,height);
             // Paint Rambley
         paintRambley(g,0,0,width,height);
             // If the pixel grid effect is to be painted
@@ -2475,10 +2475,9 @@ public class RambleyPainter extends ListenedPainter<Component>{
      * paint code from changes made to the graphics context while rendering the 
      * background.
      * @param g The graphics context to render to.
-     * @param x The x-coordinate of the top-left corner of the area to fill.
-     * @param y The y-coordinate of the top-left corner of the area to fill.
-     * @param w The width of the area to fill.
-     * @param h The height of the area to fill.
+     * @param c A {@code Component} to get useful properties for painting.
+     * @param w The width of the area to fill with the background.
+     * @param h The height of the area to fill with the background.
      * @see #paint 
      * @see #paintBackgroundDots 
      * @see BACKGROUND_COLOR
@@ -2486,17 +2485,11 @@ public class RambleyPainter extends ListenedPainter<Component>{
      * @see #BACKGROUND_GRADIENT_COLOR
      * @see #getBackgroundGradient 
      */
-    protected void paintBackground(Graphics2D g, int x, int y, int w, int h){
+    protected void paintBackground(Graphics2D g, Component c, int w, int h){
             // Create a copy of the given graphics context
         g = (Graphics2D) g.create();
-            // Start by rendering a solid color background
-        g.setColor(BACKGROUND_COLOR);
-        g.fillRect(x, y, w, h);
-            // Paint the background dots
-        paintBackgroundDots(g,x,y,w,h);
-            // Render the background gradient
-        g.setPaint(getBackgroundGradient(x,y,w,h));
-        g.fillRect(x, y, w, h);
+            // Paint the background using the background painter
+        getBackgroundPainter().paint(g, c, w, h);
             // Dispose of the copy of the graphics context
         g.dispose();
     }
