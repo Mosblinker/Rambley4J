@@ -1257,16 +1257,7 @@ public class Rambley4J extends JFrame {
                 "\n\nCredits: ";
         for (String value : CREDITS)
             message += "\n"+value;
-        RambleyIcon icon = new RambleyIcon(){
-            @Override
-            public int getIconWidth(){
-                return 128;
-            }
-            @Override
-            public int getIconHeight(){
-                return 256;
-            }
-        };
+        RambleyIcon icon = new RambleyIcon(128);
         icon.setFlags(ICON_IMAGES_RAMBLEY_FLAGS);
         icon.setRambleyOpenMouthHeight(1.0);
         
