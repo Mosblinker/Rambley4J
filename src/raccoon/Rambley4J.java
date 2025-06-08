@@ -4,8 +4,11 @@
  */
 package raccoon;
 
+import com.technicjelle.UpdateChecker;
 import files.extensions.ImageExtensions;
 import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
@@ -14,6 +17,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -23,6 +28,9 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 /**
  * This is a program that renders Rambley the Raccoon.
@@ -37,7 +45,11 @@ public class Rambley4J extends JFrame {
     /**
      * This is the version of the program.
      */
-    public static final String PROGRAM_VERSION = "0.8.1";
+    public static final String PROGRAM_VERSION = "0.9.0";
+    /**
+     * The name of the author and main developer.
+     */
+    protected static final String AUTHOR_NAME = "Mosblinker";
     /**
      * This is the pattern for the file handler to use for the log files of this 
      * program.
@@ -50,23 +62,27 @@ public class Rambley4J extends JFrame {
      * @todo Rework this and then make it public. Also add any additional 
      * credits necessary
      */
-    private static final String[] CREDITS = {
-        "                         ---- Developers ----",
-        "Mosblinker - Main developer and artist.",
-        "                          ---- Testers ----",
-        "*Insert Testers Here*",
-        "                           ---- Libraries ----",
-        "Thumbnailator - coobird - https://github.com/coobird/thumbnailator",
-        "SwingExtended - Mosblinker - https://github.com/Mosblinker/SwingExtended",
-        "FilesExtended - Mosblinker - https://github.com/Mosblinker/FilesExtended",
-        "GeomArt4J - Mosblinker - https://github.com/Mosblinker/GeomArt4J",
-        "                       ---- Special Thanks ----",
-        "Special thanks to UniqueGeese and his team for creating Indigo Park and",
-        "    thus Rambley.",
-        "Special thanks to AnimalWave on Discord for help with the calculations.",
-        "Special thanks to the UniqueGeese/Indigo Park server for encouraging me",
-        "    to make this and for giving moral support."
-    };
+    private static final String[][] CREDITS = {{
+            "Developers",
+            "Mosblinker - Main developer and artist."
+        }, {
+            "Testers",
+            "*Insert Testers Here*"
+        }, {
+            "Libraries",
+            "Thumbnailator - coobird - https://github.com/coobird/thumbnailator",
+            "SwingExtended - Mosblinker - https://github.com/Mosblinker/SwingExtended",
+            "FilesExtended - Mosblinker - https://github.com/Mosblinker/FilesExtended",
+            "GeomArt4J - Mosblinker - https://github.com/Mosblinker/GeomArt4J",
+            "UpdateChecker - TechnicJelle - https://github.com/TechnicJelle/UpdateCheckerJava",
+        }, {
+            "Special Thanks",
+            "Special thanks to UniqueGeese and his team for creating Indigo "
+            + "Park and thus Rambley.",
+            "Special thanks to AnimalWave on Discord for help with the calculations.",
+            "Special thanks to the UniqueGeese/Indigo Park server for "
+            + "encouraging me to make this and for giving moral support."
+    }};
     /**
      * This is an array containing the widths and heights for the icon images 
      * for this program. The icon images are generated on the fly.
@@ -153,6 +169,12 @@ public class Rambley4J extends JFrame {
      */
     private static final String SAVE_FILE_CHOOSER_DIRECTORY_KEY = 
             "SaveCurrentDirectory";
+    /**
+     * This is the key in the preference node for whether the program checks for 
+     * updates at the start of the program.
+     */
+    private static final String CHECK_FOR_UPDATES_AT_START_KEY = 
+            "CheckForUpdatesAtStartup";
     /**
      * The default width for the image of Rambley.
      */
@@ -250,11 +272,53 @@ public class Rambley4J extends JFrame {
         iconImgPainter.setRambleyOpenMouthHeight(1.0);
             // Generate the icon images for this program
         setIconImages(generateIconImages(iconImgPainter));
+        try{
+            updateChecker = new UpdateChecker(AUTHOR_NAME,PROGRAM_NAME,
+                    PROGRAM_VERSION);
+        } catch (RuntimeException ex){
+            log(Level.WARNING, this.getClass(), "Rambley4J", 
+                    "UpdateChecker could not be constructed", ex);
+        }
         initComponents();
+        RambleyIcon aboutIcon = new RambleyIcon(128);
+        aboutIcon.setFlags(ICON_IMAGES_RAMBLEY_FLAGS);
+        aboutIcon.setRambleyOpenMouthHeight(1.0);
+        aboutIconLabel.setIcon(aboutIcon);
+        aboutIcon = new RambleyIcon(64);
+        aboutIcon.setFlags(ICON_IMAGES_RAMBLEY_FLAGS);
+        aboutIcon.setRambleyOpenMouthHeight(1.0);
+        updateIconLabel.setIcon(aboutIcon);
+        
+            // Get the document for the credits text pane
+        StyledDocument doc = aboutCreditsTextPane.getStyledDocument();
+            // Create a style to use to center the text on the text pane
+        SimpleAttributeSet centeredText = new SimpleAttributeSet();
+            // Make the style center the text
+        StyleConstants.setAlignment(centeredText, StyleConstants.ALIGN_CENTER);
+            // This is a String to get the credits text
+        String credits = "";
+            // Go through the credits arrays
+        for (int i = 0; i < CREDITS.length; i++){
+                // If this is not the first array
+            if (i > 0)
+                credits += System.lineSeparator()+System.lineSeparator();
+                // Add the header for this section
+            credits += "---- "+CREDITS[i][0]+" ----";
+                // Go through the credits in this section
+            for (int j = 1; j < CREDITS[i].length; j++){
+                credits += System.lineSeparator()+CREDITS[i][j];
+            }
+        }
+        aboutCreditsTextPane.setText(credits);
+            // Apply the centered text style to the entire pane
+        doc.setParagraphAttributes(0, doc.getLength(), centeredText, false);
+        
         if (debugMode)
             previewLabel.setComponentPopupMenu(debugPopup);
         try{    // Try to load the settings from the preference node
             config = Preferences.userRoot().node(PREFERENCE_NODE_NAME);
+            checkUpdatesAtStartToggle.setSelected(config.getBoolean(
+                    CHECK_FOR_UPDATES_AT_START_KEY, true));
             rambleyPainter.setFlags(config.getInt(RAMBLEY_FLAGS_KEY, 
                     rambleyPainter.getFlags()) & RambleyPainter.MAXIMUM_VALID_FLAGS);
             bgDotSizeSpinner.setValue(config.getDouble(BACKGROUND_DOT_SIZE_KEY, 
@@ -337,6 +401,10 @@ public class Rambley4J extends JFrame {
         rambleyPainter.addPropertyChangeListener(new RambleyHandler());
         updatePixelGridInputEnabled();
         updatePolkaDotsInputEnabled();
+            // If the program should check for updates at startup
+        if (checkUpdatesAtStartToggle.isSelected()){
+            new UpdateCheckWorker(true).execute();
+        }
     }
     /**
      * Creates new form Rambley4J
@@ -584,6 +652,33 @@ public class Rambley4J extends JFrame {
         printButton = new javax.swing.JMenuItem();
         inputEnabledToggle = new javax.swing.JCheckBoxMenuItem();
         fc = new javax.swing.JFileChooser();
+        aboutDialog = new javax.swing.JDialog(this);
+        aboutPanel = new javax.swing.JPanel();
+        aboutIconLabel = new javax.swing.JLabel();
+        aboutMainPanel = new javax.swing.JPanel();
+        aboutNameLabel = new javax.swing.JLabel();
+        javax.swing.Box.Filler filler20 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 7), new java.awt.Dimension(0, 7), new java.awt.Dimension(32767, 7));
+        aboutVersionLabel = new javax.swing.JLabel();
+        javax.swing.Box.Filler filler21 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 7), new java.awt.Dimension(0, 7), new java.awt.Dimension(32767, 7));
+        aboutCreditsPanel = new javax.swing.JPanel();
+        aboutCreditsScrollPane = new javax.swing.JScrollPane();
+        aboutCreditsTextPane = new javax.swing.JTextPane();
+        aboutBottomPanel = new javax.swing.JPanel();
+        aboutButtonsPanel = new javax.swing.JPanel();
+        updateButton = new javax.swing.JButton();
+        filler19 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
+        aboutOkButton = new javax.swing.JButton();
+        updateCheckDialog = new javax.swing.JDialog(this);
+        updatePanel = new javax.swing.JPanel();
+        updateIconLabel = new javax.swing.JLabel();
+        updateTextLabel = new javax.swing.JLabel();
+        currentVersTextLabel = new javax.swing.JLabel();
+        latestVersTextLabel = new javax.swing.JLabel();
+        checkUpdatesAtStartToggle = new javax.swing.JCheckBox();
+        currentVersLabel = new javax.swing.JLabel();
+        latestVersLabel = new javax.swing.JLabel();
+        updateContinueButton = new javax.swing.JButton();
+        updateOpenButton = new javax.swing.JButton();
         previewLabel = new components.JThumbnailLabel();
         bgToggle = new javax.swing.JCheckBox();
         gridToggle = new javax.swing.JCheckBox();
@@ -660,6 +755,198 @@ public class Rambley4J extends JFrame {
         debugPopup.add(inputEnabledToggle);
 
         fc.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
+
+        aboutDialog.setTitle("About "+PROGRAM_NAME);
+        aboutDialog.setMinimumSize(new java.awt.Dimension(640, 400));
+        aboutDialog.setResizable(false);
+
+        aboutPanel.setLayout(new java.awt.BorderLayout(18, 7));
+
+        aboutIconLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        aboutIconLabel.setAlignmentX(0.5F);
+        aboutPanel.add(aboutIconLabel, java.awt.BorderLayout.LINE_START);
+
+        aboutMainPanel.setLayout(new javax.swing.BoxLayout(aboutMainPanel, javax.swing.BoxLayout.Y_AXIS));
+
+        aboutNameLabel.setFont(aboutNameLabel.getFont().deriveFont(aboutNameLabel.getFont().getStyle() | java.awt.Font.BOLD, aboutNameLabel.getFont().getSize()+9));
+        aboutNameLabel.setText(PROGRAM_NAME);
+        aboutNameLabel.setAlignmentX(0.5F);
+        aboutMainPanel.add(aboutNameLabel);
+        aboutMainPanel.add(filler20);
+
+        aboutVersionLabel.setFont(aboutVersionLabel.getFont().deriveFont((aboutVersionLabel.getFont().getStyle() | java.awt.Font.ITALIC) | java.awt.Font.BOLD, aboutVersionLabel.getFont().getSize()+5));
+        aboutVersionLabel.setText("Version "+PROGRAM_VERSION);
+        aboutVersionLabel.setAlignmentX(0.5F);
+        aboutMainPanel.add(aboutVersionLabel);
+        aboutMainPanel.add(filler21);
+
+        aboutCreditsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Credits"));
+        aboutCreditsPanel.setLayout(new java.awt.BorderLayout());
+
+        aboutCreditsTextPane.setEditable(false);
+        aboutCreditsScrollPane.setViewportView(aboutCreditsTextPane);
+
+        aboutCreditsPanel.add(aboutCreditsScrollPane, java.awt.BorderLayout.CENTER);
+
+        aboutMainPanel.add(aboutCreditsPanel);
+
+        aboutPanel.add(aboutMainPanel, java.awt.BorderLayout.CENTER);
+
+        aboutBottomPanel.setLayout(new java.awt.BorderLayout());
+
+        aboutButtonsPanel.setLayout(new javax.swing.BoxLayout(aboutButtonsPanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        updateButton.setText("Check For Updates");
+        updateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateButtonActionPerformed(evt);
+            }
+        });
+        aboutButtonsPanel.add(updateButton);
+        aboutButtonsPanel.add(filler19);
+
+        aboutOkButton.setText("OK");
+        aboutOkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutOkButtonActionPerformed(evt);
+            }
+        });
+        aboutButtonsPanel.add(aboutOkButton);
+
+        aboutBottomPanel.add(aboutButtonsPanel, java.awt.BorderLayout.LINE_END);
+
+        aboutPanel.add(aboutBottomPanel, java.awt.BorderLayout.PAGE_END);
+
+        javax.swing.GroupLayout aboutDialogLayout = new javax.swing.GroupLayout(aboutDialog.getContentPane());
+        aboutDialog.getContentPane().setLayout(aboutDialogLayout);
+        aboutDialogLayout.setHorizontalGroup(
+            aboutDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(aboutDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(aboutPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        aboutDialogLayout.setVerticalGroup(
+            aboutDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(aboutDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(aboutPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        updateCheckDialog.setTitle(PROGRAM_NAME+" Update Checker");
+        updateCheckDialog.setMinimumSize(new java.awt.Dimension(400, 196));
+        updateCheckDialog.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
+        updateCheckDialog.setResizable(false);
+
+        updatePanel.setLayout(new java.awt.GridBagLayout());
+
+        updateIconLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 18);
+        updatePanel.add(updateIconLabel, gridBagConstraints);
+
+        updateTextLabel.setText("A new version of "+PROGRAM_NAME+" is available.");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 0.9;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 18, 0);
+        updatePanel.add(updateTextLabel, gridBagConstraints);
+
+        currentVersTextLabel.setText("Current Version:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 6, 12);
+        updatePanel.add(currentVersTextLabel, gridBagConstraints);
+
+        latestVersTextLabel.setText("Latest Version:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 12);
+        updatePanel.add(latestVersTextLabel, gridBagConstraints);
+
+        checkUpdatesAtStartToggle.setSelected(true);
+        checkUpdatesAtStartToggle.setText("Check for Updates at startup");
+        checkUpdatesAtStartToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkUpdatesAtStartToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(13, 0, 0, 0);
+        updatePanel.add(checkUpdatesAtStartToggle, gridBagConstraints);
+
+        currentVersLabel.setText(PROGRAM_VERSION);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 6, 0);
+        updatePanel.add(currentVersLabel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        updatePanel.add(latestVersLabel, gridBagConstraints);
+
+        updateContinueButton.setText("Continue");
+        updateContinueButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateContinueButtonActionPerformed(evt);
+            }
+        });
+
+        updateOpenButton.setText("Go to web page");
+        updateOpenButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateOpenButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout updateCheckDialogLayout = new javax.swing.GroupLayout(updateCheckDialog.getContentPane());
+        updateCheckDialog.getContentPane().setLayout(updateCheckDialogLayout);
+        updateCheckDialogLayout.setHorizontalGroup(
+            updateCheckDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(updateCheckDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(updateCheckDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(updatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, updateCheckDialogLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(updateOpenButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(updateContinueButton)))
+                .addContainerGap())
+        );
+        updateCheckDialogLayout.setVerticalGroup(
+            updateCheckDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(updateCheckDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(updatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(13, 13, 13)
+                .addGroup(updateCheckDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(updateContinueButton)
+                    .addComponent(updateOpenButton))
+                .addContainerGap())
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(PROGRAM_NAME);
@@ -1326,28 +1613,40 @@ public class Rambley4J extends JFrame {
     }//GEN-LAST:event_inputEnabledToggleActionPerformed
 
     private void aboutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutButtonActionPerformed
-            // TODO: Rework the about window to look good.
-        String message = "About "+PROGRAM_NAME+
-                "\nVersion: "+PROGRAM_VERSION+
-                "\n\nCredits: ";
-        for (String value : CREDITS)
-            message += "\n"+value;
-        RambleyIcon icon = new RambleyIcon(){
-            @Override
-            public int getIconWidth(){
-                return 128;
-            }
-            @Override
-            public int getIconHeight(){
-                return 256;
-            }
-        };
-        icon.setFlags(ICON_IMAGES_RAMBLEY_FLAGS);
-        icon.setRambleyOpenMouthHeight(1.0);
-        
-        JOptionPane.showMessageDialog(this, message, "About "+PROGRAM_NAME,
-                JOptionPane.PLAIN_MESSAGE,icon);
+            // Make the about dialog location relative to the program
+        aboutDialog.setLocationRelativeTo(this);
+            // Show the about dialog
+        aboutDialog.setVisible(true);
     }//GEN-LAST:event_aboutButtonActionPerformed
+
+    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
+        new UpdateCheckWorker(false).execute();
+    }//GEN-LAST:event_updateButtonActionPerformed
+
+    private void aboutOkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutOkButtonActionPerformed
+        aboutDialog.setVisible(false);
+    }//GEN-LAST:event_aboutOkButtonActionPerformed
+
+    private void checkUpdatesAtStartToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkUpdatesAtStartToggleActionPerformed
+        updateConfigBoolean(CHECK_FOR_UPDATES_AT_START_KEY,
+                checkUpdatesAtStartToggle);
+    }//GEN-LAST:event_checkUpdatesAtStartToggleActionPerformed
+
+    private void updateContinueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateContinueButtonActionPerformed
+        updateCheckDialog.setVisible(false);
+    }//GEN-LAST:event_updateContinueButtonActionPerformed
+
+    private void updateOpenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateOpenButtonActionPerformed
+            // Get the update URL
+        String url = updateChecker.getUpdateUrl();
+        try {   // Try to open the update URL in the user's web browser
+            Desktop.getDesktop().browse(new URL(url).toURI());
+        } catch (URISyntaxException | IOException ex) {
+            log(Level.WARNING, this.getClass(),
+                    "updateOpenButtonActionPerformed",
+                    "Could not open update URL "+url,ex);
+        }
+    }//GEN-LAST:event_updateOpenButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1427,6 +1726,8 @@ public class Rambley4J extends JFrame {
         updatePixelGridInputEnabled();
         updatePolkaDotsInputEnabled();
         fc.setEnabled(enabled);
+        updateButton.setEnabled(enabled);
+        updateOpenButton.setEnabled(enabled);
     }
     
     private void updatePixelGridInputEnabled(){
@@ -1446,7 +1747,9 @@ public class Rambley4J extends JFrame {
         bgDotSpacingSpinner.setEnabled(bgDotSizeSpinner.isEnabled());
         bgDotsShapeCombo.setEnabled(bgDotSizeSpinner.isEnabled());
     }
-    
+    /**
+     * This is the painter used to paint Rambley.
+     */
     private RambleyPainter rambleyPainter;
     /**
      * This is a preference node to store the settings for this program.
@@ -1464,8 +1767,24 @@ public class Rambley4J extends JFrame {
      * Whether this application is in debug mode.
      */
     private final boolean debugMode;
+    /**
+     * This is the checker to use to check for updates for the program.
+     */
+    private UpdateChecker updateChecker = null;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel aboutBottomPanel;
     private javax.swing.JButton aboutButton;
+    private javax.swing.JPanel aboutButtonsPanel;
+    private javax.swing.JPanel aboutCreditsPanel;
+    private javax.swing.JScrollPane aboutCreditsScrollPane;
+    private javax.swing.JTextPane aboutCreditsTextPane;
+    private javax.swing.JDialog aboutDialog;
+    private javax.swing.JLabel aboutIconLabel;
+    private javax.swing.JPanel aboutMainPanel;
+    private javax.swing.JLabel aboutNameLabel;
+    private javax.swing.JButton aboutOkButton;
+    private javax.swing.JPanel aboutPanel;
+    private javax.swing.JLabel aboutVersionLabel;
     private javax.swing.JCheckBox bandanaToggle;
     private javax.swing.JLabel bgDotSizeLabel;
     private javax.swing.JSpinner bgDotSizeSpinner;
@@ -1477,6 +1796,9 @@ public class Rambley4J extends JFrame {
     private javax.swing.JPanel bgDotsSpinnerPanel;
     private javax.swing.JCheckBox bgToggle;
     private javax.swing.JPanel centerSidePanel;
+    private javax.swing.JCheckBox checkUpdatesAtStartToggle;
+    private javax.swing.JLabel currentVersLabel;
+    private javax.swing.JLabel currentVersTextLabel;
     private javax.swing.JPopupMenu debugPopup;
     private javax.swing.JCheckBox evilToggle;
     private swing.TwoAxisSlider eyeCtrlL;
@@ -1488,6 +1810,7 @@ public class Rambley4J extends JFrame {
     private javax.swing.Box.Filler filler12;
     private javax.swing.Box.Filler filler13;
     private javax.swing.Box.Filler filler14;
+    private javax.swing.Box.Filler filler19;
     private javax.swing.Box.Filler filler2;
     private javax.swing.Box.Filler filler3;
     private javax.swing.Box.Filler filler4;
@@ -1509,6 +1832,8 @@ public class Rambley4J extends JFrame {
     private javax.swing.JCheckBox ignoreRatioToggle;
     private javax.swing.JCheckBoxMenuItem inputEnabledToggle;
     private javax.swing.JCheckBox jawToggle;
+    private javax.swing.JLabel latestVersLabel;
+    private javax.swing.JLabel latestVersTextLabel;
     private javax.swing.JPanel leftCenterSidePanel;
     private javax.swing.JCheckBox linkEyesToggle;
     private javax.swing.JCheckBox linkSizeToggle;
@@ -1524,6 +1849,13 @@ public class Rambley4J extends JFrame {
     private javax.swing.JCheckBox shadowToggle;
     private javax.swing.JPanel sidePanel;
     private javax.swing.JPanel sizePanel;
+    private javax.swing.JButton updateButton;
+    private javax.swing.JDialog updateCheckDialog;
+    private javax.swing.JButton updateContinueButton;
+    private javax.swing.JLabel updateIconLabel;
+    private javax.swing.JButton updateOpenButton;
+    private javax.swing.JPanel updatePanel;
+    private javax.swing.JLabel updateTextLabel;
     private javax.swing.JLabel widthLabel;
     private javax.swing.JSpinner widthSpinner;
     // End of variables declaration//GEN-END:variables
@@ -1730,6 +2062,109 @@ public class Rambley4J extends JFrame {
                         "Image Failed To Save", JOptionPane.ERROR_MESSAGE);
             }
             setInputEnabled(true);
+        }
+    }
+    /**
+     * 
+     */
+    private class UpdateCheckWorker extends SwingWorker<Boolean, Void>{
+        /**
+         * This gets whether there is an update available for the program.
+         */
+        private boolean updateAvailable = false;
+        
+        private boolean success = false;
+        /**
+         * Whether this is being called at the start of the program.
+         */
+        private boolean isAtStart;
+        /**
+         * 
+         * @param isAtStart 
+         */
+        UpdateCheckWorker(boolean isAtStart){
+            this.isAtStart = isAtStart;
+        }
+        @Override
+        protected Boolean doInBackground() throws Exception {
+            getLogger().entering(this.getClass().getName(), "doInBackground");
+                // If this is at the start of the program
+            if (isAtStart){
+                log(Level.FINER, this.getClass(),"doInBackground", 
+                        "Running at start of program");
+                updateButton.setEnabled(false);
+            } else
+                setInputEnabled(false);
+                // Whether this should retry to check for an update
+            boolean retry = false;
+            do{     // If this is not at the start of the program
+                if (!isAtStart)
+                        // Set the cursor to the one for waiting
+                    setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                try{    // Check for an update
+                    updateChecker.check();
+                    success = true;
+                } catch (Exception ex){
+                    log(Level.WARNING, this.getClass(),"doInBackground", 
+                            "An error occurred while checking the latest version",
+                            ex);
+                        // If this is not at the start of the program
+                    if (!isAtStart){
+                            // Reset the cursor
+                        setCursor(null);
+                            // Ask the user if they would like to try checking for 
+                            // updates again
+                        retry = JOptionPane.showConfirmDialog(aboutDialog,
+                                "Failed to check for updates.\nWould you like to try again?",
+                                "Update Checker Failed",JOptionPane.YES_NO_OPTION,
+                                JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION;
+                    }
+                }
+            }   // While this has not checked for an update and the user wants 
+                // to try again
+            while (!success && retry);
+                // Get whether there is an update available
+            updateAvailable = updateChecker.isUpdateAvailable();
+            getLogger().exiting(this.getClass().getName(), "doInBackground", 
+                    updateAvailable);
+            return updateAvailable;
+        }
+        @Override
+        protected void done(){
+                // If this was successful at checking for an update
+            if (success){
+                    // If there's an update available, then set the text for the 
+                    // latest version label to be the latest version for the 
+                    // program. Otherwise, just state the current version
+                latestVersLabel.setText((updateAvailable) ? 
+                        updateChecker.getLatestVersion() : 
+                        updateChecker.getCurrentVersion());
+            }
+            System.gc();        // Run the garbage collector
+            setInputEnabled(true);
+                // Reset the cursor
+            setCursor(null);
+                // If this was successful at checking for an update
+            if (success){
+                    // If there is an update available for the program
+                if (updateAvailable){
+                        // Log the update
+                    updateChecker.logUpdateMessage(getLogger());
+                        // Set the update check dialog's location relative to 
+                        // this if at startup and relative to the about dialog 
+                        // if the check was initialized from there.
+                    updateCheckDialog.setLocationRelativeTo(
+                            (isAtStart)?Rambley4J.this:aboutDialog);
+                    updateCheckDialog.setVisible(true);
+                        // If this is not at the start of the program
+                } else if (!isAtStart){
+                    JOptionPane.showMessageDialog(aboutDialog, 
+                            "This program is already up to date,",
+                            updateCheckDialog.getTitle(), 
+                            JOptionPane.INFORMATION_MESSAGE, 
+                            updateIconLabel.getIcon());
+                }
+            }
         }
     }
 }
