@@ -39,6 +39,12 @@ public class Rambley4J extends JFrame {
      */
     public static final String PROGRAM_VERSION = "0.8.1";
     /**
+     * This is the pattern for the file handler to use for the log files of this 
+     * program.
+     */
+    private static final String PROGRAM_LOG_PATTERN = 
+            "%h/.mosblinker/logs/"+PROGRAM_NAME+"-%u.%g.log";
+    /**
      * This is the credits for the program. This is currently private as I plan 
      * to rework it.
      * @todo Rework this and then make it public. Also add any additional 
