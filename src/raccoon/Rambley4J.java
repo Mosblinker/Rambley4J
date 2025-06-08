@@ -4,6 +4,7 @@
  */
 package raccoon;
 
+import com.technicjelle.UpdateChecker;
 import files.extensions.ImageExtensions;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -255,6 +256,13 @@ public class Rambley4J extends JFrame {
         iconImgPainter.setRambleyOpenMouthHeight(1.0);
             // Generate the icon images for this program
         setIconImages(generateIconImages(iconImgPainter));
+        try{
+            updateChecker = new UpdateChecker(AUTHOR_NAME,PROGRAM_NAME,
+                    PROGRAM_VERSION);
+        } catch (RuntimeException ex){
+            log(Level.WARNING, this.getClass(), "Rambley4J", 
+                    "UpdateChecker could not be constructed", ex);
+        }
         initComponents();
         RambleyIcon aboutIcon = new RambleyIcon(128);
         aboutIcon.setFlags(ICON_IMAGES_RAMBLEY_FLAGS);
@@ -1676,7 +1684,9 @@ public class Rambley4J extends JFrame {
         bgDotSpacingSpinner.setEnabled(bgDotSizeSpinner.isEnabled());
         bgDotsShapeCombo.setEnabled(bgDotSizeSpinner.isEnabled());
     }
-    
+    /**
+     * This is the painter used to paint Rambley.
+     */
     private RambleyPainter rambleyPainter;
     /**
      * This is a preference node to store the settings for this program.
@@ -1694,6 +1704,10 @@ public class Rambley4J extends JFrame {
      * Whether this application is in debug mode.
      */
     private final boolean debugMode;
+    /**
+     * This is the checker to use to check for updates for the program.
+     */
+    private UpdateChecker updateChecker = null;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel aboutBottomPanel;
     private javax.swing.JButton aboutButton;
