@@ -1706,6 +1706,7 @@ public class Rambley4J extends JFrame {
         }
         @Override
         protected Void doInBackground() throws Exception {
+            getLogger().entering(this.getClass().getName(), "doInBackground");
             setInputEnabled(false);
                 // If the file's parent was not created
             if (!createDirectories(file.getParentFile()))
@@ -1716,6 +1717,8 @@ public class Rambley4J extends JFrame {
             BufferedImage image = createRambleyImage(width,height);
                 // Save the image
             success = saveImage(image,file);
+            getLogger().exiting(this.getClass().getName(), "doInBackground", 
+                    success);
             return null;
         }
         @Override
