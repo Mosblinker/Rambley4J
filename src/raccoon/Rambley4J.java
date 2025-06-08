@@ -7,6 +7,7 @@ package raccoon;
 import com.technicjelle.UpdateChecker;
 import files.extensions.ImageExtensions;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
@@ -15,6 +16,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -1585,6 +1588,15 @@ public class Rambley4J extends JFrame {
     }//GEN-LAST:event_updateContinueButtonActionPerformed
 
     private void updateOpenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateOpenButtonActionPerformed
+            // Get the update URL
+        String url = updateChecker.getUpdateUrl();
+        try {   // Try to open the update URL in the user's web browser
+            Desktop.getDesktop().browse(new URL(url).toURI());
+        } catch (URISyntaxException | IOException ex) {
+            log(Level.WARNING, this.getClass(),
+                    "updateOpenButtonActionPerformed",
+                    "Could not open update URL "+url,ex);
+        }
     }//GEN-LAST:event_updateOpenButtonActionPerformed
 
     /**
