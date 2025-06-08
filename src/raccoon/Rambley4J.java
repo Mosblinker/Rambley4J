@@ -2087,14 +2087,18 @@ public class Rambley4J extends JFrame {
         protected Boolean doInBackground() throws Exception {
             getLogger().entering(this.getClass().getName(), "doInBackground");
                 // If this is at the start of the program
-            if (isAtStart)
+            if (isAtStart){
                 log(Level.FINER, this.getClass(),"doInBackground", 
                         "Running at start of program");
-            setInputEnabled(false);
+                updateButton.setEnabled(false);
+            } else
+                setInputEnabled(false);
                 // Whether this should retry to check for an update
             boolean retry = false;
-            do{     // Set the cursor to the one for waiting
-                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            do{     // If this is not at the start of the program
+                if (!isAtStart)
+                        // Set the cursor to the one for waiting
+                    setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 try{    // Check for an update
                     updateChecker.check();
                     success = true;
@@ -2102,6 +2106,7 @@ public class Rambley4J extends JFrame {
                     log(Level.WARNING, this.getClass(),"doInBackground", 
                             "An error occurred while checking the latest version",
                             ex);
+                        // If this is not at the start of the program
                     if (!isAtStart){
                             // Reset the cursor
                         setCursor(null);
