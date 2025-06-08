@@ -59,24 +59,27 @@ public class Rambley4J extends JFrame {
      * @todo Rework this and then make it public. Also add any additional 
      * credits necessary
      */
-    private static final String[] CREDITS = {
-        "                         ---- Developers ----",
-        "Mosblinker - Main developer and artist.",
-        "                          ---- Testers ----",
-        "*Insert Testers Here*",
-        "                           ---- Libraries ----",
-        "Thumbnailator - coobird - https://github.com/coobird/thumbnailator",
-        "SwingExtended - Mosblinker - https://github.com/Mosblinker/SwingExtended",
-        "FilesExtended - Mosblinker - https://github.com/Mosblinker/FilesExtended",
-        "GeomArt4J - Mosblinker - https://github.com/Mosblinker/GeomArt4J",
-        "UpdateChecker - TechnicJelle - https://github.com/TechnicJelle/UpdateCheckerJava",
-        "                       ---- Special Thanks ----",
-        "Special thanks to UniqueGeese and his team for creating Indigo Park and",
-        "    thus Rambley.",
-        "Special thanks to AnimalWave on Discord for help with the calculations.",
-        "Special thanks to the UniqueGeese/Indigo Park server for encouraging me",
-        "    to make this and for giving moral support."
-    };
+    private static final String[][] CREDITS = {{
+            "Developers",
+            "Mosblinker - Main developer and artist."
+        }, {
+            "Testers",
+            "*Insert Testers Here*"
+        }, {
+            "Libraries",
+            "Thumbnailator - coobird - https://github.com/coobird/thumbnailator",
+            "SwingExtended - Mosblinker - https://github.com/Mosblinker/SwingExtended",
+            "FilesExtended - Mosblinker - https://github.com/Mosblinker/FilesExtended",
+            "GeomArt4J - Mosblinker - https://github.com/Mosblinker/GeomArt4J",
+            "UpdateChecker - TechnicJelle - https://github.com/TechnicJelle/UpdateCheckerJava",
+        }, {
+            "Special Thanks",
+            "Special thanks to UniqueGeese and his team for creating Indigo "
+            + "Park and thus Rambley.",
+            "Special thanks to AnimalWave on Discord for help with the calculations.",
+            "Special thanks to the UniqueGeese/Indigo Park server for "
+            + "encouraging me to make this and for giving moral support."
+    }};
     /**
      * This is an array containing the widths and heights for the icon images 
      * for this program. The icon images are generated on the fly.
