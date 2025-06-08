@@ -1726,6 +1726,8 @@ public class Rambley4J extends JFrame {
         updatePixelGridInputEnabled();
         updatePolkaDotsInputEnabled();
         fc.setEnabled(enabled);
+        updateButton.setEnabled(enabled);
+        updateOpenButton.setEnabled(enabled);
     }
     
     private void updatePixelGridInputEnabled(){
