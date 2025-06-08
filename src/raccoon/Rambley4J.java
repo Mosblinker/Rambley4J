@@ -37,6 +37,10 @@ public class Rambley4J extends JFrame {
      */
     public static final String PROGRAM_VERSION = "0.8.1";
     /**
+     * The name of the author and main developer.
+     */
+    protected static final String AUTHOR_NAME = "Mosblinker";
+    /**
      * This is the credits for the program. This is currently private as I plan 
      * to rework it.
      * @todo Rework this and then make it public. Also add any additional 
