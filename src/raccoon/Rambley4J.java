@@ -281,6 +281,10 @@ public class Rambley4J extends JFrame {
         aboutIcon.setFlags(ICON_IMAGES_RAMBLEY_FLAGS);
         aboutIcon.setRambleyOpenMouthHeight(1.0);
         aboutIconLabel.setIcon(aboutIcon);
+        aboutIcon = new RambleyIcon(64);
+        aboutIcon.setFlags(ICON_IMAGES_RAMBLEY_FLAGS);
+        aboutIcon.setRambleyOpenMouthHeight(1.0);
+        updateIconLabel.setIcon(aboutIcon);
         
         if (debugMode)
             previewLabel.setComponentPopupMenu(debugPopup);
