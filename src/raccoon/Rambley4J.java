@@ -18,6 +18,8 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -160,7 +162,75 @@ public class Rambley4J extends JFrame {
     private static final int ICON_IMAGES_RAMBLEY_FLAGS = 
             RambleyPainter.PAINT_RAMBLEY_OUTLINE_FLAG | 
             RambleyPainter.PAINT_RAMBLEY_SHADOW_FLAG;
-    
+    /**
+     * 
+     */
+    private static final Logger logger = Logger.getLogger(PROGRAM_NAME+"-"+
+            PROGRAM_VERSION);
+    /**
+     * 
+     * @return 
+     */
+    public static Logger getLogger(){
+        return logger;
+    }
+    /**
+     * 
+     * @param level
+     * @param sourceClass
+     * @param method
+     * @param msg
+     */
+    public static void log(Level level, Class sourceClass, String method, 
+            String msg){
+        getLogger().logp(level, sourceClass.getName(), method, msg);
+    }
+    /**
+     * 
+     * @param level
+     * @param sourceClass
+     * @param method
+     * @param msg
+     * @param thrown
+     */
+    public static void log(Level level, Class sourceClass, String method, 
+            String msg, Throwable thrown){
+        getLogger().logp(level, sourceClass.getName(), method, msg, thrown);
+    }
+    /**
+     * 
+     * @param level
+     * @param sourceClass
+     * @param method
+     * @param msg
+     * @param param1
+     */
+    public static void log(Level level, Class sourceClass, String method, 
+            String msg, Object param1){
+        getLogger().logp(level, sourceClass.getName(), method, msg, param1);
+    }
+    /**
+     * 
+     * @param level
+     * @param sourceClass
+     * @param method
+     * @param msg
+     * @param params
+     */
+    public static void log(Level level, Class sourceClass, String method, 
+            String msg, Object[] params){
+        getLogger().logp(level, sourceClass.getName(), method, msg, params);
+    }
+    /**
+     * 
+     * @param sourceClass
+     * @param method
+     * @param thrown 
+     */
+    public static void logThrown(Class sourceClass, String method, 
+            Throwable thrown){
+        getLogger().throwing(sourceClass.getName(), method, thrown);
+    }
     /**
      * Creates new form Rambley4J
      * @param debugMode
