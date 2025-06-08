@@ -367,6 +367,10 @@ public class Rambley4J extends JFrame {
         rambleyPainter.addPropertyChangeListener(new RambleyHandler());
         updatePixelGridInputEnabled();
         updatePolkaDotsInputEnabled();
+            // If the program should check for updates at startup
+        if (checkUpdatesAtStartToggle.isSelected()){
+            new UpdateCheckWorker(true).execute();
+        }
     }
     /**
      * Creates new form Rambley4J
