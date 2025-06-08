@@ -163,6 +163,12 @@ public class Rambley4J extends JFrame {
     private static final String SAVE_FILE_CHOOSER_DIRECTORY_KEY = 
             "SaveCurrentDirectory";
     /**
+     * This is the key in the preference node for whether the program checks for 
+     * updates at the start of the program.
+     */
+    private static final String CHECK_FOR_UPDATES_AT_START_KEY = 
+            "CheckForUpdatesAtStartup";
+    /**
      * The default width for the image of Rambley.
      */
     private static final int DEFAULT_RAMBLEY_WIDTH = 1024;
@@ -276,6 +282,8 @@ public class Rambley4J extends JFrame {
             previewLabel.setComponentPopupMenu(debugPopup);
         try{    // Try to load the settings from the preference node
             config = Preferences.userRoot().node(PREFERENCE_NODE_NAME);
+            checkUpdatesAtStartToggle.setSelected(config.getBoolean(
+                    CHECK_FOR_UPDATES_AT_START_KEY, true));
             rambleyPainter.setFlags(config.getInt(RAMBLEY_FLAGS_KEY, 
                     rambleyPainter.getFlags()) & RambleyPainter.MAXIMUM_VALID_FLAGS);
             bgDotSizeSpinner.setValue(config.getDouble(BACKGROUND_DOT_SIZE_KEY, 
@@ -1581,6 +1589,8 @@ public class Rambley4J extends JFrame {
     }//GEN-LAST:event_aboutOkButtonActionPerformed
 
     private void checkUpdatesAtStartToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkUpdatesAtStartToggleActionPerformed
+        updateConfigBoolean(CHECK_FOR_UPDATES_AT_START_KEY,
+                checkUpdatesAtStartToggle);
     }//GEN-LAST:event_checkUpdatesAtStartToggleActionPerformed
 
     private void updateContinueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateContinueButtonActionPerformed
