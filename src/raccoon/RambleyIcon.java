@@ -13,8 +13,23 @@ import java.awt.*;
  */
 public class RambleyIcon extends RambleyPainter implements Icon2D {
     
+    private int width;
+    
+    private int height;
+    
+    public RambleyIcon(int width, int height){
+        if (width <= 0 || height <= 0)
+            throw new IllegalArgumentException();
+        this.width = width;
+        this.height = height;
+    }
+    
+    public RambleyIcon(int size){
+        this(size,size);
+    }
+    
     public RambleyIcon(){
-        
+        this(512);
     }
     
     @Override
@@ -24,12 +39,12 @@ public class RambleyIcon extends RambleyPainter implements Icon2D {
     }
     @Override
     public int getIconWidth() {
-        return 512;
+        return width;
     }
 
     @Override
     public int getIconHeight() {
-        return 512;
+        return height;
     }
     /**
      * This returns a String representation of this {@code RambleyIcon}. 
