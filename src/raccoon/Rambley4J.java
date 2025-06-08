@@ -7,6 +7,7 @@ package raccoon;
 import com.technicjelle.UpdateChecker;
 import files.extensions.ImageExtensions;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -2021,6 +2022,104 @@ public class Rambley4J extends JFrame {
                         "Image Failed To Save", JOptionPane.ERROR_MESSAGE);
             }
             setInputEnabled(true);
+        }
+    }
+    /**
+     * 
+     */
+    private class UpdateCheckWorker extends SwingWorker<Boolean, Void>{
+        /**
+         * This gets whether there is an update available for the program.
+         */
+        private boolean updateAvailable = false;
+        
+        private boolean success = false;
+        /**
+         * Whether this is being called at the start of the program.
+         */
+        private boolean isAtStart;
+        /**
+         * 
+         * @param isAtStart 
+         */
+        UpdateCheckWorker(boolean isAtStart){
+            this.isAtStart = isAtStart;
+        }
+        @Override
+        protected Boolean doInBackground() throws Exception {
+            getLogger().entering(this.getClass().getName(), "doInBackground");
+                // If this is at the start of the program
+            if (isAtStart)
+                log(Level.FINER, this.getClass(),"doInBackground", 
+                        "Running at start of program");
+            setInputEnabled(false);
+                // Whether this should retry to check for an update
+            boolean retry = false;
+            do{     // Set the cursor to the one for waiting
+                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                try{    // Check for an update
+                    updateChecker.check();
+                    success = true;
+                } catch (Exception ex){
+                    log(Level.WARNING, this.getClass(),"doInBackground", 
+                            "An error occurred while checking the latest version",
+                            ex);
+                    if (!isAtStart){
+                            // Reset the cursor
+                        setCursor(null);
+                            // Ask the user if they would like to try checking for 
+                            // updates again
+                        retry = JOptionPane.showConfirmDialog(aboutDialog,
+                                "Failed to check for updates.\nWould you like to try again?",
+                                "Update Checker Failed",JOptionPane.YES_NO_OPTION,
+                                JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION;
+                    }
+                }
+            }   // While this has not checked for an update and the user wants 
+                // to try again
+            while (!success && retry);
+                // Get whether there is an update available
+            updateAvailable = updateChecker.isUpdateAvailable();
+            getLogger().exiting(this.getClass().getName(), "doInBackground", 
+                    updateAvailable);
+            return updateAvailable;
+        }
+        @Override
+        protected void done(){
+                // If this was successful at checking for an update
+            if (success){
+                    // If there's an update available, then set the text for the 
+                    // latest version label to be the latest version for the 
+                    // program. Otherwise, just state the current version
+                latestVersLabel.setText((updateAvailable) ? 
+                        updateChecker.getLatestVersion() : 
+                        updateChecker.getCurrentVersion());
+            }
+            System.gc();        // Run the garbage collector
+            setInputEnabled(true);
+                // Reset the cursor
+            setCursor(null);
+                // If this was successful at checking for an update
+            if (success){
+                    // If there is an update available for the program
+                if (updateAvailable){
+                        // Log the update
+                    updateChecker.logUpdateMessage(getLogger());
+                        // Set the update check dialog's location relative to 
+                        // this if at startup and relative to the about dialog 
+                        // if the check was initialized from there.
+                    updateCheckDialog.setLocationRelativeTo(
+                            (isAtStart)?Rambley4J.this:aboutDialog);
+                    updateCheckDialog.setVisible(true);
+                        // If this is not at the start of the program
+                } else if (!isAtStart){
+                    JOptionPane.showMessageDialog(aboutDialog, 
+                            "This program is already up to date,",
+                            updateCheckDialog.getTitle(), 
+                            JOptionPane.INFORMATION_MESSAGE, 
+                            updateIconLabel.getIcon());
+                }
+            }
         }
     }
 }
