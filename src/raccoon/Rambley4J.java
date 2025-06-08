@@ -1582,7 +1582,7 @@ public class Rambley4J extends JFrame {
     }//GEN-LAST:event_aboutButtonActionPerformed
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-        
+        new UpdateCheckWorker(false).execute();
     }//GEN-LAST:event_updateButtonActionPerformed
 
     private void aboutOkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutOkButtonActionPerformed
