@@ -1671,7 +1671,18 @@ public class Rambley4J extends JFrame {
                     PROGRAM_LOG_PATTERN,0,8));
         } catch (IOException | SecurityException ex) {
             getLogger().log(Level.SEVERE, "Failed to get log file", ex);
-        }
+        }   // Log the user's OS name
+        getLogger().log(Level.CONFIG, "OS: {0}, version: {1}, arch: {2}", new Object[]{
+                System.getProperty("os.name"),
+                System.getProperty("os.version"),
+                System.getProperty("os.arch")});
+            // Log the Java vendor name and url
+        getLogger().log(Level.CONFIG, "Java vendor: {0}, URL: {1}", new Object[]{
+                System.getProperty("java.vendor"),
+                System.getProperty("java.vendor.url")});
+            // Log the Java version
+        getLogger().log(Level.CONFIG, "Java version: {0}", 
+                System.getProperty("java.version"));
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -1689,6 +1700,12 @@ public class Rambley4J extends JFrame {
             getLogger().log(Level.SEVERE, "Failed to load Nimbus LnF", ex);
         }
         //</editor-fold>
+            // If there is no look and feel set
+        if (UIManager.getLookAndFeel() == null)
+            getLogger().log(Level.CONFIG, "Look and Feel: null");
+        else    // Log the current Look and Feel
+            getLogger().log(Level.CONFIG, "Look and Feel: {0}",
+                    UIManager.getLookAndFeel().getName());
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
