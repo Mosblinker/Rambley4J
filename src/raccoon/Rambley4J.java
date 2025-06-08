@@ -530,6 +530,17 @@ public class Rambley4J extends JFrame {
         updateButton = new javax.swing.JButton();
         filler19 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
         aboutOkButton = new javax.swing.JButton();
+        updateCheckDialog = new javax.swing.JDialog(this);
+        updatePanel = new javax.swing.JPanel();
+        updateIconLabel = new javax.swing.JLabel();
+        updateTextLabel = new javax.swing.JLabel();
+        currentVersTextLabel = new javax.swing.JLabel();
+        latestVersTextLabel = new javax.swing.JLabel();
+        checkUpdatesAtStartToggle = new javax.swing.JCheckBox();
+        currentVersLabel = new javax.swing.JLabel();
+        latestVersLabel = new javax.swing.JLabel();
+        updateContinueButton = new javax.swing.JButton();
+        updateOpenButton = new javax.swing.JButton();
         previewLabel = new components.JThumbnailLabel();
         bgToggle = new javax.swing.JCheckBox();
         gridToggle = new javax.swing.JCheckBox();
@@ -682,6 +693,120 @@ public class Rambley4J extends JFrame {
             .addGroup(aboutDialogLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(aboutPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        updateCheckDialog.setTitle(PROGRAM_NAME+" Update Checker");
+        updateCheckDialog.setMinimumSize(new java.awt.Dimension(400, 196));
+        updateCheckDialog.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
+        updateCheckDialog.setResizable(false);
+
+        updatePanel.setLayout(new java.awt.GridBagLayout());
+
+        updateIconLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 18);
+        updatePanel.add(updateIconLabel, gridBagConstraints);
+
+        updateTextLabel.setText("A new version of "+PROGRAM_NAME+" is available.");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 0.9;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 18, 0);
+        updatePanel.add(updateTextLabel, gridBagConstraints);
+
+        currentVersTextLabel.setText("Current Version:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 6, 12);
+        updatePanel.add(currentVersTextLabel, gridBagConstraints);
+
+        latestVersTextLabel.setText("Latest Version:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 12);
+        updatePanel.add(latestVersTextLabel, gridBagConstraints);
+
+        checkUpdatesAtStartToggle.setSelected(true);
+        checkUpdatesAtStartToggle.setText("Check for Updates at startup");
+        checkUpdatesAtStartToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkUpdatesAtStartToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(13, 0, 0, 0);
+        updatePanel.add(checkUpdatesAtStartToggle, gridBagConstraints);
+
+        currentVersLabel.setText(PROGRAM_VERSION);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 6, 0);
+        updatePanel.add(currentVersLabel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        updatePanel.add(latestVersLabel, gridBagConstraints);
+
+        updateContinueButton.setText("Continue");
+        updateContinueButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateContinueButtonActionPerformed(evt);
+            }
+        });
+
+        updateOpenButton.setText("Go to web page");
+        updateOpenButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateOpenButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout updateCheckDialogLayout = new javax.swing.GroupLayout(updateCheckDialog.getContentPane());
+        updateCheckDialog.getContentPane().setLayout(updateCheckDialogLayout);
+        updateCheckDialogLayout.setHorizontalGroup(
+            updateCheckDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(updateCheckDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(updateCheckDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(updatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, updateCheckDialogLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(updateOpenButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(updateContinueButton)))
+                .addContainerGap())
+        );
+        updateCheckDialogLayout.setVerticalGroup(
+            updateCheckDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(updateCheckDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(updatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(13, 13, 13)
+                .addGroup(updateCheckDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(updateContinueButton)
+                    .addComponent(updateOpenButton))
                 .addContainerGap())
         );
 
@@ -1364,6 +1489,16 @@ public class Rambley4J extends JFrame {
         aboutDialog.setVisible(false);
     }//GEN-LAST:event_aboutOkButtonActionPerformed
 
+    private void checkUpdatesAtStartToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkUpdatesAtStartToggleActionPerformed
+    }//GEN-LAST:event_checkUpdatesAtStartToggleActionPerformed
+
+    private void updateContinueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateContinueButtonActionPerformed
+        updateCheckDialog.setVisible(false);
+    }//GEN-LAST:event_updateContinueButtonActionPerformed
+
+    private void updateOpenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateOpenButtonActionPerformed
+    }//GEN-LAST:event_updateOpenButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1491,6 +1626,9 @@ public class Rambley4J extends JFrame {
     private javax.swing.JPanel bgDotsSpinnerPanel;
     private javax.swing.JCheckBox bgToggle;
     private javax.swing.JPanel centerSidePanel;
+    private javax.swing.JCheckBox checkUpdatesAtStartToggle;
+    private javax.swing.JLabel currentVersLabel;
+    private javax.swing.JLabel currentVersTextLabel;
     private javax.swing.JPopupMenu debugPopup;
     private javax.swing.JCheckBox evilToggle;
     private swing.TwoAxisSlider eyeCtrlL;
@@ -1524,6 +1662,8 @@ public class Rambley4J extends JFrame {
     private javax.swing.JCheckBox ignoreRatioToggle;
     private javax.swing.JCheckBoxMenuItem inputEnabledToggle;
     private javax.swing.JCheckBox jawToggle;
+    private javax.swing.JLabel latestVersLabel;
+    private javax.swing.JLabel latestVersTextLabel;
     private javax.swing.JPanel leftCenterSidePanel;
     private javax.swing.JCheckBox linkEyesToggle;
     private javax.swing.JCheckBox linkSizeToggle;
@@ -1540,6 +1680,12 @@ public class Rambley4J extends JFrame {
     private javax.swing.JPanel sidePanel;
     private javax.swing.JPanel sizePanel;
     private javax.swing.JButton updateButton;
+    private javax.swing.JDialog updateCheckDialog;
+    private javax.swing.JButton updateContinueButton;
+    private javax.swing.JLabel updateIconLabel;
+    private javax.swing.JButton updateOpenButton;
+    private javax.swing.JPanel updatePanel;
+    private javax.swing.JLabel updateTextLabel;
     private javax.swing.JLabel widthLabel;
     private javax.swing.JSpinner widthSpinner;
     // End of variables declaration//GEN-END:variables
