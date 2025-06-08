@@ -28,6 +28,9 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 /**
  * This is a program that renders Rambley the Raccoon.
@@ -285,6 +288,30 @@ public class Rambley4J extends JFrame {
         aboutIcon.setFlags(ICON_IMAGES_RAMBLEY_FLAGS);
         aboutIcon.setRambleyOpenMouthHeight(1.0);
         updateIconLabel.setIcon(aboutIcon);
+        
+            // Get the document for the credits text pane
+        StyledDocument doc = aboutCreditsTextPane.getStyledDocument();
+            // Create a style to use to center the text on the text pane
+        SimpleAttributeSet centeredText = new SimpleAttributeSet();
+            // Make the style center the text
+        StyleConstants.setAlignment(centeredText, StyleConstants.ALIGN_CENTER);
+            // This is a String to get the credits text
+        String credits = "";
+            // Go through the credits arrays
+        for (int i = 0; i < CREDITS.length; i++){
+                // If this is not the first array
+            if (i > 0)
+                credits += System.lineSeparator()+System.lineSeparator();
+                // Add the header for this section
+            credits += "---- "+CREDITS[i][0]+" ----";
+                // Go through the credits in this section
+            for (int j = 1; j < CREDITS[i].length; j++){
+                credits += System.lineSeparator()+CREDITS[i][j];
+            }
+        }
+        aboutCreditsTextPane.setText(credits);
+            // Apply the centered text style to the entire pane
+        doc.setParagraphAttributes(0, doc.getLength(), centeredText, false);
         
         if (debugMode)
             previewLabel.setComponentPopupMenu(debugPopup);
