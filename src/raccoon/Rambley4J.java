@@ -265,7 +265,7 @@ public class Rambley4J extends JFrame {
                 int shape = rambleyPainter.getBackgroundPainter().getPolkaDotShape();
                 rambleyPainter.getBackgroundPainter().setPolkaDotShape(config.getInt(BACKGROUND_DOT_SHAPE_KEY, shape));
             } catch (IllegalArgumentException ex) {
-                System.out.println("Invalid Shape: " +ex);
+                log(Level.INFO,this.getClass(),"Rambley4J","Invalid Shape",ex);
             }
             bgDotsShapeCombo.setSelectedIndex(rambleyPainter.getBackgroundPainter().getPolkaDotShape());
             gridSpacingSpinner.setValue(config.getDouble(PIXEL_GRID_SPACING_KEY, 
@@ -325,9 +325,11 @@ public class Rambley4J extends JFrame {
             }
         } catch (SecurityException | IllegalStateException ex){
             config = null;
-            System.out.println("Unable to load settings: " +ex);
+            log(Level.SEVERE, this.getClass(), "Rambley4J", 
+                    "Unable to load settings",ex);
         } catch (IllegalArgumentException ex){
-            System.out.println("Invalid setting: " + ex);
+            log(Level.WARNING, this.getClass(), "Rambley4J", 
+                    "Invalid setting",ex);
         }
         fc.setFileFilter(ImageExtensions.PNG_FILTER);
         updateToggleSettings();
@@ -392,8 +394,8 @@ public class Rambley4J extends JFrame {
             try{
                 config.putInt(RAMBLEY_FLAGS_KEY, rambleyPainter.getFlags());
             } catch (IllegalStateException ex){ 
-                if (debugMode)      // If we are in debug mode
-                    System.out.println("Error: " + ex);
+                log(Level.WARNING, this.getClass(), "updateStateInSettings", 
+                    "Error storing flags for RambleyPainter",ex);
             }
         }
     }
@@ -410,8 +412,8 @@ public class Rambley4J extends JFrame {
             try{
                 config.putBoolean(key, toggleButton.isSelected());
             } catch (IllegalStateException ex){ 
-                if (debugMode)    // If we are in debug mode
-                    System.out.println("Error: " + ex);
+                log(Level.WARNING, this.getClass(), "updateConfigBoolean", 
+                    "Error storing button state",ex);
             }
         }
     }
@@ -509,8 +511,8 @@ public class Rambley4J extends JFrame {
                 config.put(SAVE_FILE_CHOOSER_DIRECTORY_KEY, 
                         fc.getCurrentDirectory().toString());
             }catch (IllegalStateException ex){ 
-                if (debugMode)    // If we are in debug mode
-                    System.out.println("Error: " + ex);
+                log(Level.WARNING, this.getClass(), "showSaveFileChooser", 
+                    "Error storing settings for file chooser " + fc,ex);
             }
         }   // If the user wants to save the file
         if (option == JFileChooser.APPROVE_OPTION)
@@ -551,6 +553,8 @@ public class Rambley4J extends JFrame {
             try {   // Try to save the image
                 return ImageIO.write(image, "png", file);
             } catch (IOException ex) {
+                log(Level.WARNING, this.getClass(), "saveImage", 
+                    "Error saving image to file \""+file+"\"",ex);
                     // Show the user a prompt asking if the program should try 
                     // again, and if the user says yes, then tis should try again
                 retry = JOptionPane.showConfirmDialog(this, 
@@ -1311,8 +1315,8 @@ public class Rambley4J extends JFrame {
             try{    // Set the stored size in the preference node
                 setPreferenceSize(null,getSize());
             }catch (IllegalStateException ex){ 
-                if (debugMode)    // If we are in debug mode
-                    System.out.println("Error: " + ex);
+                log(Level.WARNING, this.getClass(), "formComponentResized", 
+                    "Error storing program size",ex);
             }
         }
     }//GEN-LAST:event_formComponentResized
@@ -1589,8 +1593,9 @@ public class Rambley4J extends JFrame {
                         }
                     }
                 } catch (IllegalStateException ex){ 
-                    if (debugMode)      // If we are in debug mode
-                        System.out.println("Error: " + ex);
+                    log(Level.WARNING, this.getClass(), "propertyChange", 
+                            "Error encountered in processing change to painter", 
+                            ex);
                 }
             }
         }
@@ -1629,16 +1634,21 @@ public class Rambley4J extends JFrame {
     private boolean createDirectories(File dir, String existingMessage, 
             String errorMessage) {
         String message;     // The message to display
+            // The exception that was thrown
+        Exception ex = null;
         try {
             Files.createDirectories(dir.toPath());
             return true;
         }
         catch(FileAlreadyExistsException exc) {
             message = existingMessage+" already exists as a file.";
+            ex = exc;
         }
         catch (IOException | SecurityException exc) {
             message = "An error occurred while creating the "+errorMessage;
+            ex = exc;
         }
+        log(Level.WARNING,this.getClass(),"createDirectories",message,ex);
         Toolkit.getDefaultToolkit().beep();
         JOptionPane.showMessageDialog(this,message,
                 "ERROR - Error Creating Directory",
