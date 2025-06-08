@@ -180,6 +180,11 @@ public class Rambley4J extends JFrame {
             // Generate the icon images for this program
         setIconImages(generateIconImages(iconImgPainter));
         initComponents();
+        RambleyIcon aboutIcon = new RambleyIcon(128);
+        aboutIcon.setFlags(ICON_IMAGES_RAMBLEY_FLAGS);
+        aboutIcon.setRambleyOpenMouthHeight(1.0);
+        aboutIconLabel.setIcon(aboutIcon);
+        
         if (debugMode)
             previewLabel.setComponentPopupMenu(debugPopup);
         try{    // Try to load the settings from the preference node
@@ -509,6 +514,22 @@ public class Rambley4J extends JFrame {
         printButton = new javax.swing.JMenuItem();
         inputEnabledToggle = new javax.swing.JCheckBoxMenuItem();
         fc = new javax.swing.JFileChooser();
+        aboutDialog = new javax.swing.JDialog(this);
+        aboutPanel = new javax.swing.JPanel();
+        aboutIconLabel = new javax.swing.JLabel();
+        aboutMainPanel = new javax.swing.JPanel();
+        aboutNameLabel = new javax.swing.JLabel();
+        javax.swing.Box.Filler filler20 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 7), new java.awt.Dimension(0, 7), new java.awt.Dimension(32767, 7));
+        aboutVersionLabel = new javax.swing.JLabel();
+        javax.swing.Box.Filler filler21 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 7), new java.awt.Dimension(0, 7), new java.awt.Dimension(32767, 7));
+        aboutCreditsPanel = new javax.swing.JPanel();
+        aboutCreditsScrollPane = new javax.swing.JScrollPane();
+        aboutCreditsTextPane = new javax.swing.JTextPane();
+        aboutBottomPanel = new javax.swing.JPanel();
+        aboutButtonsPanel = new javax.swing.JPanel();
+        updateButton = new javax.swing.JButton();
+        filler19 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
+        aboutOkButton = new javax.swing.JButton();
         previewLabel = new components.JThumbnailLabel();
         bgToggle = new javax.swing.JCheckBox();
         gridToggle = new javax.swing.JCheckBox();
@@ -585,6 +606,84 @@ public class Rambley4J extends JFrame {
         debugPopup.add(inputEnabledToggle);
 
         fc.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
+
+        aboutDialog.setTitle("About "+PROGRAM_NAME);
+        aboutDialog.setMinimumSize(new java.awt.Dimension(640, 400));
+        aboutDialog.setResizable(false);
+
+        aboutPanel.setLayout(new java.awt.BorderLayout(18, 7));
+
+        aboutIconLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        aboutIconLabel.setAlignmentX(0.5F);
+        aboutPanel.add(aboutIconLabel, java.awt.BorderLayout.LINE_START);
+
+        aboutMainPanel.setLayout(new javax.swing.BoxLayout(aboutMainPanel, javax.swing.BoxLayout.Y_AXIS));
+
+        aboutNameLabel.setFont(aboutNameLabel.getFont().deriveFont(aboutNameLabel.getFont().getStyle() | java.awt.Font.BOLD, aboutNameLabel.getFont().getSize()+9));
+        aboutNameLabel.setText(PROGRAM_NAME);
+        aboutNameLabel.setAlignmentX(0.5F);
+        aboutMainPanel.add(aboutNameLabel);
+        aboutMainPanel.add(filler20);
+
+        aboutVersionLabel.setFont(aboutVersionLabel.getFont().deriveFont((aboutVersionLabel.getFont().getStyle() | java.awt.Font.ITALIC) | java.awt.Font.BOLD, aboutVersionLabel.getFont().getSize()+5));
+        aboutVersionLabel.setText("Version "+PROGRAM_VERSION);
+        aboutVersionLabel.setAlignmentX(0.5F);
+        aboutMainPanel.add(aboutVersionLabel);
+        aboutMainPanel.add(filler21);
+
+        aboutCreditsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Credits"));
+        aboutCreditsPanel.setLayout(new java.awt.BorderLayout());
+
+        aboutCreditsTextPane.setEditable(false);
+        aboutCreditsScrollPane.setViewportView(aboutCreditsTextPane);
+
+        aboutCreditsPanel.add(aboutCreditsScrollPane, java.awt.BorderLayout.CENTER);
+
+        aboutMainPanel.add(aboutCreditsPanel);
+
+        aboutPanel.add(aboutMainPanel, java.awt.BorderLayout.CENTER);
+
+        aboutBottomPanel.setLayout(new java.awt.BorderLayout());
+
+        aboutButtonsPanel.setLayout(new javax.swing.BoxLayout(aboutButtonsPanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        updateButton.setText("Check For Updates");
+        updateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateButtonActionPerformed(evt);
+            }
+        });
+        aboutButtonsPanel.add(updateButton);
+        aboutButtonsPanel.add(filler19);
+
+        aboutOkButton.setText("OK");
+        aboutOkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutOkButtonActionPerformed(evt);
+            }
+        });
+        aboutButtonsPanel.add(aboutOkButton);
+
+        aboutBottomPanel.add(aboutButtonsPanel, java.awt.BorderLayout.LINE_END);
+
+        aboutPanel.add(aboutBottomPanel, java.awt.BorderLayout.PAGE_END);
+
+        javax.swing.GroupLayout aboutDialogLayout = new javax.swing.GroupLayout(aboutDialog.getContentPane());
+        aboutDialog.getContentPane().setLayout(aboutDialogLayout);
+        aboutDialogLayout.setHorizontalGroup(
+            aboutDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(aboutDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(aboutPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        aboutDialogLayout.setVerticalGroup(
+            aboutDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(aboutDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(aboutPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(PROGRAM_NAME);
@@ -1251,19 +1350,19 @@ public class Rambley4J extends JFrame {
     }//GEN-LAST:event_inputEnabledToggleActionPerformed
 
     private void aboutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutButtonActionPerformed
-            // TODO: Rework the about window to look good.
-        String message = "About "+PROGRAM_NAME+
-                "\nVersion: "+PROGRAM_VERSION+
-                "\n\nCredits: ";
-        for (String value : CREDITS)
-            message += "\n"+value;
-        RambleyIcon icon = new RambleyIcon(128);
-        icon.setFlags(ICON_IMAGES_RAMBLEY_FLAGS);
-        icon.setRambleyOpenMouthHeight(1.0);
-        
-        JOptionPane.showMessageDialog(this, message, "About "+PROGRAM_NAME,
-                JOptionPane.PLAIN_MESSAGE,icon);
+            // Make the about dialog location relative to the program
+        aboutDialog.setLocationRelativeTo(this);
+            // Show the about dialog
+        aboutDialog.setVisible(true);
     }//GEN-LAST:event_aboutButtonActionPerformed
+
+    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
+        
+    }//GEN-LAST:event_updateButtonActionPerformed
+
+    private void aboutOkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutOkButtonActionPerformed
+        aboutDialog.setVisible(false);
+    }//GEN-LAST:event_aboutOkButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1368,7 +1467,19 @@ public class Rambley4J extends JFrame {
      */
     private final boolean debugMode;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel aboutBottomPanel;
     private javax.swing.JButton aboutButton;
+    private javax.swing.JPanel aboutButtonsPanel;
+    private javax.swing.JPanel aboutCreditsPanel;
+    private javax.swing.JScrollPane aboutCreditsScrollPane;
+    private javax.swing.JTextPane aboutCreditsTextPane;
+    private javax.swing.JDialog aboutDialog;
+    private javax.swing.JLabel aboutIconLabel;
+    private javax.swing.JPanel aboutMainPanel;
+    private javax.swing.JLabel aboutNameLabel;
+    private javax.swing.JButton aboutOkButton;
+    private javax.swing.JPanel aboutPanel;
+    private javax.swing.JLabel aboutVersionLabel;
     private javax.swing.JCheckBox bandanaToggle;
     private javax.swing.JLabel bgDotSizeLabel;
     private javax.swing.JSpinner bgDotSizeSpinner;
@@ -1391,6 +1502,7 @@ public class Rambley4J extends JFrame {
     private javax.swing.Box.Filler filler12;
     private javax.swing.Box.Filler filler13;
     private javax.swing.Box.Filler filler14;
+    private javax.swing.Box.Filler filler19;
     private javax.swing.Box.Filler filler2;
     private javax.swing.Box.Filler filler3;
     private javax.swing.Box.Filler filler4;
@@ -1427,6 +1539,7 @@ public class Rambley4J extends JFrame {
     private javax.swing.JCheckBox shadowToggle;
     private javax.swing.JPanel sidePanel;
     private javax.swing.JPanel sizePanel;
+    private javax.swing.JButton updateButton;
     private javax.swing.JLabel widthLabel;
     private javax.swing.JSpinner widthSpinner;
     // End of variables declaration//GEN-END:variables
