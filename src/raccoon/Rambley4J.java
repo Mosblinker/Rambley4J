@@ -203,63 +203,6 @@ public class Rambley4J extends JFrame {
         return logger;
     }
     /**
-     * 
-     * @param level
-     * @param sourceClass
-     * @param method
-     * @param msg
-     */
-    public static void log(Level level, Class sourceClass, String method, 
-            String msg){
-        getLogger().logp(level, sourceClass.getName(), method, msg);
-    }
-    /**
-     * 
-     * @param level
-     * @param sourceClass
-     * @param method
-     * @param msg
-     * @param thrown
-     */
-    public static void log(Level level, Class sourceClass, String method, 
-            String msg, Throwable thrown){
-        getLogger().logp(level, sourceClass.getName(), method, msg, thrown);
-    }
-    /**
-     * 
-     * @param level
-     * @param sourceClass
-     * @param method
-     * @param msg
-     * @param param1
-     */
-    public static void log(Level level, Class sourceClass, String method, 
-            String msg, Object param1){
-        getLogger().logp(level, sourceClass.getName(), method, msg, param1);
-    }
-    /**
-     * 
-     * @param level
-     * @param sourceClass
-     * @param method
-     * @param msg
-     * @param params
-     */
-    public static void log(Level level, Class sourceClass, String method, 
-            String msg, Object[] params){
-        getLogger().logp(level, sourceClass.getName(), method, msg, params);
-    }
-    /**
-     * 
-     * @param sourceClass
-     * @param method
-     * @param thrown 
-     */
-    public static void logThrown(Class sourceClass, String method, 
-            Throwable thrown){
-        getLogger().throwing(sourceClass.getName(), method, thrown);
-    }
-    /**
      * Creates new form Rambley4J
      * @param debugMode
      */
@@ -276,7 +219,7 @@ public class Rambley4J extends JFrame {
             updateChecker = new UpdateChecker(AUTHOR_NAME,PROGRAM_NAME,
                     PROGRAM_VERSION);
         } catch (RuntimeException ex){
-            log(Level.WARNING, this.getClass(), "Rambley4J", 
+            getLogger().log(Level.WARNING, 
                     "UpdateChecker could not be constructed", ex);
         }
         initComponents();
@@ -329,7 +272,7 @@ public class Rambley4J extends JFrame {
                 int shape = rambleyPainter.getBackgroundPainter().getPolkaDotShape();
                 rambleyPainter.getBackgroundPainter().setPolkaDotShape(config.getInt(BACKGROUND_DOT_SHAPE_KEY, shape));
             } catch (IllegalArgumentException ex) {
-                log(Level.INFO,this.getClass(),"Rambley4J","Invalid Shape",ex);
+                getLogger().log(Level.INFO,"Invalid Shape",ex);
             }
             bgDotsShapeCombo.setSelectedIndex(rambleyPainter.getBackgroundPainter().getPolkaDotShape());
             gridSpacingSpinner.setValue(config.getDouble(PIXEL_GRID_SPACING_KEY, 
@@ -389,11 +332,9 @@ public class Rambley4J extends JFrame {
             }
         } catch (SecurityException | IllegalStateException ex){
             config = null;
-            log(Level.SEVERE, this.getClass(), "Rambley4J", 
-                    "Unable to load settings",ex);
+            getLogger().log(Level.SEVERE, "Unable to load settings",ex);
         } catch (IllegalArgumentException ex){
-            log(Level.WARNING, this.getClass(), "Rambley4J", 
-                    "Invalid setting",ex);
+            getLogger().log(Level.WARNING, "Invalid setting",ex);
         }
         fc.setFileFilter(ImageExtensions.PNG_FILTER);
         updateToggleSettings();
@@ -462,8 +403,8 @@ public class Rambley4J extends JFrame {
             try{
                 config.putInt(RAMBLEY_FLAGS_KEY, rambleyPainter.getFlags());
             } catch (IllegalStateException ex){ 
-                log(Level.WARNING, this.getClass(), "updateStateInSettings", 
-                    "Error storing flags for RambleyPainter",ex);
+                getLogger().log(Level.WARNING, 
+                        "Error storing flags for RambleyPainter",ex);
             }
         }
     }
@@ -480,8 +421,7 @@ public class Rambley4J extends JFrame {
             try{
                 config.putBoolean(key, toggleButton.isSelected());
             } catch (IllegalStateException ex){ 
-                log(Level.WARNING, this.getClass(), "updateConfigBoolean", 
-                    "Error storing button state",ex);
+                getLogger().log(Level.WARNING, "Error storing button state",ex);
             }
         }
     }
@@ -579,8 +519,8 @@ public class Rambley4J extends JFrame {
                 config.put(SAVE_FILE_CHOOSER_DIRECTORY_KEY, 
                         fc.getCurrentDirectory().toString());
             }catch (IllegalStateException ex){ 
-                log(Level.WARNING, this.getClass(), "showSaveFileChooser", 
-                    "Error storing settings for file chooser " + fc,ex);
+                getLogger().log(Level.WARNING, 
+                        "Error storing settings for file chooser " + fc,ex);
             }
         }   // If the user wants to save the file
         if (option == JFileChooser.APPROVE_OPTION)
@@ -621,8 +561,8 @@ public class Rambley4J extends JFrame {
             try {   // Try to save the image
                 return ImageIO.write(image, "png", file);
             } catch (IOException ex) {
-                log(Level.WARNING, this.getClass(), "saveImage", 
-                    "Error saving image to file \""+file+"\"",ex);
+                getLogger().log(Level.WARNING, 
+                        "Error saving image to file \""+file+"\"",ex);
                     // Show the user a prompt asking if the program should try 
                     // again, and if the user says yes, then tis should try again
                 retry = JOptionPane.showConfirmDialog(this, 
@@ -1602,8 +1542,7 @@ public class Rambley4J extends JFrame {
             try{    // Set the stored size in the preference node
                 setPreferenceSize(null,getSize());
             }catch (IllegalStateException ex){ 
-                log(Level.WARNING, this.getClass(), "formComponentResized", 
-                    "Error storing program size",ex);
+                getLogger().log(Level.WARNING, "Error storing program size",ex);
             }
         }
     }//GEN-LAST:event_formComponentResized
@@ -1642,9 +1581,7 @@ public class Rambley4J extends JFrame {
         try {   // Try to open the update URL in the user's web browser
             Desktop.getDesktop().browse(new URL(url).toURI());
         } catch (URISyntaxException | IOException ex) {
-            log(Level.WARNING, this.getClass(),
-                    "updateOpenButtonActionPerformed",
-                    "Could not open update URL "+url,ex);
+            getLogger().log(Level.WARNING, "Could not open update URL "+url,ex);
         }
     }//GEN-LAST:event_updateOpenButtonActionPerformed
 
@@ -1942,7 +1879,7 @@ public class Rambley4J extends JFrame {
                         }
                     }
                 } catch (IllegalStateException ex){ 
-                    log(Level.WARNING, this.getClass(), "propertyChange", 
+                    getLogger().log(Level.WARNING, 
                             "Error encountered in processing change to painter", 
                             ex);
                 }
@@ -1997,7 +1934,7 @@ public class Rambley4J extends JFrame {
             message = "An error occurred while creating the "+errorMessage;
             ex = exc;
         }
-        log(Level.WARNING,this.getClass(),"createDirectories",message,ex);
+        getLogger().log(Level.WARNING,message,ex);
         Toolkit.getDefaultToolkit().beep();
         JOptionPane.showMessageDialog(this,message,
                 "ERROR - Error Creating Directory",
@@ -2110,8 +2047,7 @@ public class Rambley4J extends JFrame {
             getLogger().entering(this.getClass().getName(), "doInBackground");
                 // If this is at the start of the program
             if (isAtStart){
-                log(Level.FINER, this.getClass(),"doInBackground", 
-                        "Running at start of program");
+                getLogger().log(Level.FINER, "Running at start of program");
                 updateButton.setEnabled(false);
             } else
                 setInputEnabled(false);
@@ -2125,7 +2061,7 @@ public class Rambley4J extends JFrame {
                     updateChecker.check();
                     success = true;
                 } catch (Exception ex){
-                    log(Level.WARNING, this.getClass(),"doInBackground", 
+                    getLogger().log(Level.WARNING, 
                             "An error occurred while checking the latest version",
                             ex);
                         // If this is not at the start of the program
