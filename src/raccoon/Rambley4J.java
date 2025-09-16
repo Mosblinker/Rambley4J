@@ -93,7 +93,7 @@ public class Rambley4J extends JFrame {
      * this program.
      */
     private static final String PREFERENCE_NODE_NAME = 
-            "milo/raccoon/Rambley4J";
+            "mosblinker/raccoon/Rambley4J";
     /**
      * This is the key in the preference node for the state of the painter used 
      * to render Rambley the Raccoon.
